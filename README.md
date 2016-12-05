@@ -1,4 +1,4 @@
-# Omnipay: eSewa
+# eSewa API Integration with Omnipay
 
 **eSewa driver for the Omnipay PHP payment processing library**
 
