@@ -6,7 +6,6 @@
 processing library for PHP 5.3+. This package implements NAB Transact support for Omnipay.
 
 [![Build Status](https://travis-ci.org/sudiptpa/esewa.svg?branch=master)](https://travis-ci.org/sudiptpa/esewa)
-
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/sudiptpa/esewa/master/LICENSE)
 
 ## Installation
