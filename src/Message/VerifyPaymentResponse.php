@@ -25,7 +25,7 @@ class VerifyPaymentResponse extends AbstractResponse
      */
     public function getResponseText()
     {
-        return (string) $data->response_code;
+        return (string) $this->data->response_code;
     }
 
     /**

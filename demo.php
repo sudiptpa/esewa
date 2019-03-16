@@ -29,7 +29,7 @@ if ($response->isRedirect()) {
 $response = $gateway->verifyPayment([
     'amount'          => 100,
     'referenceNumber' => 'GDFG89',
-    'productCode'     => 'gadfg-gadf',
+    'productCode'     => 'ABAC2098',
 ])->send();
 
 if ($response->isSuccessful()) {

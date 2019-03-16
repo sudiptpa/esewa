@@ -10,7 +10,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     /**
      * @var string
      */
-    protected $liveEndpoint = ' https://esewa.com.np/';
+    protected $liveEndpoint = 'https://esewa.com.np/';
 
     /**
      * @var string
