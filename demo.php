@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use Omnipay\Omnipay;
 
@@ -9,16 +9,16 @@ $gateway = Omnipay::create('Esewa_Secure');
 $gateway->setMerchantCode('test_merchant');
 $gateway->setTestMode(true);
 
-$response = $gateway->purchase([
-    'amount' => 100,
+$response = $gateway->purchase(array(
+    'amount'         => 100,
     'deliveryCharge' => 0,
-    'serviceCharge' => 0,
-    'taxAmount' => 0,
-    'totalAmount' => 100,
-    'productCode' => 'ABAC2098',
-    'returnUrl' => 'https://merchant.com/payment/1/complete',
-    'failedUrl' => 'https://merchant.com/payment/1/failed',
-])->send();
+    'serviceCharge'  => 0,
+    'taxAmount'      => 0,
+    'totalAmount'    => 100,
+    'productCode'    => 'ABAC2098',
+    'returnUrl'      => 'https://merchant.com/payment/1/complete',
+    'failedUrl'      => 'https://merchant.com/payment/1/failed',
+))->send();
 
 if ($response->isRedirect()) {
     $response->redirect();
@@ -26,11 +26,11 @@ if ($response->isRedirect()) {
 
 // Verify Payment
 
-$response = $gateway->verifyPayment([
-    'amount' => 100,
+$response = $gateway->verifyPayment(array(
+    'amount'          => 100,
     'referenceNumber' => 'GDFG89',
-    'productCode' => 'gadfg-gadf',
-])->send();
+    'productCode'     => 'gadfg-gadf',
+))->send();
 
 if ($response->isSuccessful()) {
     // Success

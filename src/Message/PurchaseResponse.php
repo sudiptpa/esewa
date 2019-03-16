@@ -29,7 +29,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isSuccessful()
     {
@@ -37,7 +37,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isRedirect()
     {

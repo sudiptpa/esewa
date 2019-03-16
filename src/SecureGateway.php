@@ -22,10 +22,10 @@ class SecureGateway extends AbstractGateway
      */
     public function getDefaultParameters()
     {
-        return [
+        return array(
             'merchantId' => '',
-            'testMode' => false,
-        ];
+            'testMode'   => false,
+        );
     }
 
     /**
@@ -165,7 +165,7 @@ class SecureGateway extends AbstractGateway
      *
      * @return \Omnipay\Esewa\Message\PurchaseRequest
      */
-    public function purchase(array $parameters = [])
+    public function purchase(array $parameters = array())
     {
         return $this->createRequest('\Omnipay\Esewa\Message\PurchaseRequest', $parameters);
     }
@@ -175,7 +175,7 @@ class SecureGateway extends AbstractGateway
      *
      * @return \Omnipay\Esewa\Message\VerifyPaymentRequest
      */
-    public function verifyPayment(array $parameters = [])
+    public function verifyPayment(array $parameters = array())
     {
         return $this->createRequest('\Omnipay\Esewa\Message\VerifyPaymentRequest', $parameters);
     }

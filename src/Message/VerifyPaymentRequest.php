@@ -19,12 +19,12 @@ class VerifyPaymentRequest extends AbstractRequest
      */
     public function getData()
     {
-        return [
+        return array(
             'amt' => $this->getAmount(),
             'rid' => $this->getReferenceNumber(),
             'pid' => $this->getProductCode(),
             'scd' => $this->getMerchantCode(),
-        ];
+        );
     }
 
     /**
@@ -34,7 +34,7 @@ class VerifyPaymentRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        $endPoint = $this->getEndpoint() . '?' . http_build_query($data);
+        $endPoint = $this->getEndpoint().'?'.http_build_query($data);
 
         $httpResponse = $this->httpClient->request('GET', $endPoint);
 
@@ -50,6 +50,6 @@ class VerifyPaymentRequest extends AbstractRequest
     {
         $endPoint = $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
 
-        return $endPoint . $this->verifyEndPoint;
+        return $endPoint.$this->verifyEndPoint;
     }
 }
