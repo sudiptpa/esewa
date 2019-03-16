@@ -5,7 +5,7 @@ namespace Omnipay\Esewa;
 use Omnipay\Tests\GatewayTestCase;
 
 /**
- * Class SecureGatewayTest
+ * Class SecureGatewayTest.
  */
 class SecureGatewayTest extends GatewayTestCase
 {
@@ -20,14 +20,14 @@ class SecureGatewayTest extends GatewayTestCase
     public function testPurchase()
     {
         $request = $this->gateway->purchase([
-            'amount' => 100,
+            'amount'         => 100,
             'deliveryCharge' => 0,
-            'serviceCharge' => 0,
-            'taxAmount' => 0,
-            'totalAmount' => 100,
-            'productCode' => 'ABAC2098',
-            'returnUrl' => 'https://merchant.com/payment/1/complete',
-            'failedUrl' => 'https://merchant.com/payment/1/failed',
+            'serviceCharge'  => 0,
+            'taxAmount'      => 0,
+            'totalAmount'    => 100,
+            'productCode'    => 'ABAC2098',
+            'returnUrl'      => 'https://merchant.com/payment/1/complete',
+            'failedUrl'      => 'https://merchant.com/payment/1/failed',
         ]);
 
         $this->assertInstanceOf('\Omnipay\Esewa\Message\PurchaseRequest', $request);
@@ -44,9 +44,9 @@ class SecureGatewayTest extends GatewayTestCase
     public function testVerifyPayment()
     {
         $request = $this->gateway->verifyPayment([
-            'amount' => 100,
+            'amount'          => 100,
             'referenceNumber' => 'ESEWA1001',
-            'productCode' => 'ABAC2098',
+            'productCode'     => 'ABAC2098',
         ]);
 
         $this->assertInstanceOf('\Omnipay\Esewa\Message\VerifyPaymentRequest', $request);

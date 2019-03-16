@@ -24,7 +24,7 @@ class SecureGateway extends AbstractGateway
     {
         return [
             'merchantCode' => '',
-            'testMode'   => false,
+            'testMode'     => false,
         ];
     }
 
