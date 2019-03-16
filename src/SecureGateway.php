@@ -23,8 +23,8 @@ class SecureGateway extends AbstractGateway
     public function getDefaultParameters()
     {
         return [
-            'merchantId' => '',
-            'testMode'   => false,
+            'merchantCode' => '',
+            'testMode'     => false,
         ];
     }
 
