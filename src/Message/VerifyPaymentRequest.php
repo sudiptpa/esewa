@@ -19,12 +19,12 @@ class VerifyPaymentRequest extends AbstractRequest
      */
     public function getData()
     {
-        return array(
+        return [
             'amt' => $this->getAmount(),
             'rid' => $this->getReferenceNumber(),
             'pid' => $this->getProductCode(),
             'scd' => $this->getMerchantCode(),
-        );
+        ];
     }
 
     /**

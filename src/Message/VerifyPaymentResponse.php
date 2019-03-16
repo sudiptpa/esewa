@@ -33,6 +33,6 @@ class VerifyPaymentResponse extends AbstractResponse
      */
     public function isSuccessful()
     {
-        return in_array($this->getResponseText(), array('Success'));
+        return in_array($this->getResponseText(), ['Success']);
     }
 }

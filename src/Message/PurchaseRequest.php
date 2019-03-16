@@ -21,7 +21,7 @@ class PurchaseRequest extends AbstractRequest
     {
         $this->validate('merchantCode', 'amount', 'totalAmount', 'productCode', 'failedUrl', 'returnUrl');
 
-        return array(
+        return [
             'amt'   => $this->getAmount(),
             'pdc'   => $this->getDeliveryCharge() ?: 0,
             'psc'   => $this->getServiceCharge() ?: 0,
@@ -31,7 +31,7 @@ class PurchaseRequest extends AbstractRequest
             'scd'   => $this->getMerchantCode(),
             'su'    => $this->getReturnUrl(),
             'fu'    => $this->getFailedUrl(),
-        );
+        ];
     }
 
     /**
