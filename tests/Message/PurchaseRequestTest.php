@@ -2,11 +2,10 @@
 
 namespace Omnipay\Esewa\Message;
 
-use Omnipay\Esewa\Message\PurchaseRequest;
 use Omnipay\Tests\TestCase;
 
 /**
- * Class PurchaseRequestTest
+ * Class PurchaseRequestTest.
  */
 class PurchaseRequestTest extends TestCase
 {
@@ -15,15 +14,15 @@ class PurchaseRequestTest extends TestCase
         $this->request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
 
         $this->request->initialize([
-            'merchantCode' => 'test_merchant',
-            'amount' => 100,
+            'merchantCode'   => 'test_merchant',
+            'amount'         => 100,
             'deliveryCharge' => 0,
-            'serviceCharge' => 0,
-            'taxAmount' => 0,
-            'totalAmount' => 100,
-            'productCode' => 'ABAC2098',
-            'returnUrl' => 'https://merchant.com/payment/1/complete',
-            'failedUrl' => 'https://merchant.com/payment/1/failed',
+            'serviceCharge'  => 0,
+            'taxAmount'      => 0,
+            'totalAmount'    => 100,
+            'productCode'    => 'ABAC2098',
+            'returnUrl'      => 'https://merchant.com/payment/1/complete',
+            'failedUrl'      => 'https://merchant.com/payment/1/failed',
         ]);
     }
 

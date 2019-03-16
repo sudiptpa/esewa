@@ -2,11 +2,10 @@
 
 namespace Omnipay\Esewa\Message;
 
-use Omnipay\Esewa\Message\VerifyPaymentRequest;
 use Omnipay\Tests\TestCase;
 
 /**
- * Class VerifyPaymentRequestTest
+ * Class VerifyPaymentRequestTest.
  */
 class VerifyPaymentRequestTest extends TestCase
 {
@@ -15,11 +14,11 @@ class VerifyPaymentRequestTest extends TestCase
         $this->request = new VerifyPaymentRequest($this->getHttpClient(), $this->getHttpRequest());
 
         $this->request->initialize([
-            'merchantCode' => 'test_merchant',
-            'testMode' => true,
-            'amount' => 100,
+            'merchantCode'    => 'test_merchant',
+            'testMode'        => true,
+            'amount'          => 100,
             'referenceNumber' => 'GDFG89',
-            'productCode' => 'ABAC2098',
+            'productCode'     => 'ABAC2098',
         ]);
     }
 

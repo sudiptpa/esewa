@@ -6,7 +6,7 @@ use Omnipay\Esewa\Message\PurchaseResponse;
 use Omnipay\Tests\TestCase;
 
 /**
- * Class PurchaseResponseTest
+ * Class PurchaseResponseTest.
  */
 class PurchaseResponseTest extends TestCase
 {
