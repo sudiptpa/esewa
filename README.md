@@ -5,6 +5,7 @@
 [Omnipay](https://github.com/thephpleague/omnipay) is a framework agnostic, multi-gateway payment
 processing library for PHP. This package implements eSewa support for Omnipay.
 
+[![StyleCI](https://github.styleci.io/repos/75586885/shield?branch=master&format=flat)]
 [![Build Status](https://travis-ci.org/sudiptpa/esewa.svg?branch=master)](https://travis-ci.org/sudiptpa/esewa)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/sudiptpa/esewa/master/LICENSE)
 
