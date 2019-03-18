@@ -72,6 +72,9 @@ composer require league/omnipay sudiptpa/omnipay-esewa
 
     // Failed
 ```
+## Laravel Integration
+
+Please follow the [eSewa Online Payment Gateway Integration](https://sujipthapa.co/blog/esewa-online-payment-gateway-integration-with-php) and follow step by step guidlines.
 
 ## Official Doc
 
