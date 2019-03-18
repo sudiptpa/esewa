@@ -1,8 +1,7 @@
 <?php
 
-namespace Omnipay\NABTransact\Message;
+namespace Omnipay\Esewa\Message;
 
-use Omnipay\Esewa\Message\PurchaseResponse;
 use Omnipay\Tests\TestCase;
 
 /**
