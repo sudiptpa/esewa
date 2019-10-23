@@ -80,6 +80,12 @@ Please follow the [eSewa Online Payment Gateway Integration](https://sujipthapa.
 
 Please follow the [Official Doc](https://developer.esewa.com.np) to understand about the parameters and their descriptions.
 
+## Contributing
+
+Contributions are **welcome** and will be fully **credited**.
+
+Contributions can be made via a Pull Request on [Github](https://github.com/sudiptpa/esewa).
+
 ## Support
 
 If you are having general issues with Omnipay Esewa, drop an email to sudiptpa@gmail.com for quick support.
