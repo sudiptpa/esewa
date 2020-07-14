@@ -25,4 +25,5 @@ install:
   - if [[ $setup = 'basic' ]]; then travis_retry composer install --no-interaction --prefer-dist; fi
   - if [[ $setup = 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable; fi
 
-script: vendor/bin/phpcs --standard=PSR2 src && vendor/bin/phpunit --coverage-text
+script: vendor/bin/phpcs --exclude=Generic.Files.LineLength src/ --standard=PSR2 src && vendor/bin/phpunit --coverage-text
+
