@@ -56,8 +56,8 @@ class VerifyPaymentRequest extends AbstractRequest
         $endPoint = $this->getEndpoint();
 
         $headers = [
-            'User-Agent' => $this->getUserAgent(),
-            'Accept' => "application/xml",
+            'User-Agent'   => $this->getUserAgent(),
+            'Accept'       => 'application/xml',
             'Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8',
         ];
 
@@ -75,6 +75,6 @@ class VerifyPaymentRequest extends AbstractRequest
     {
         $endPoint = $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
 
-        return $endPoint . $this->verifyEndPoint;
+        return $endPoint.$this->verifyEndPoint;
     }
 }
