@@ -6,7 +6,7 @@ use Omnipay\Omnipay;
 
 $gateway = Omnipay::create('Esewa_Secure');
 
-$gateway->setMerchantCode('test_merchant');
+$gateway->setMerchantCode('epay_payment');
 $gateway->setTestMode(true);
 
 $response = $gateway->purchase([

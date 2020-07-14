@@ -14,7 +14,7 @@ class PurchaseRequestTest extends TestCase
         $this->request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
 
         $this->request->initialize([
-            'merchantCode'   => 'test_merchant',
+            'merchantCode'   => 'epay_payment',
             'amount'         => 100,
             'deliveryCharge' => 0,
             'serviceCharge'  => 0,

@@ -14,7 +14,7 @@ class VerifyPaymentRequestTest extends TestCase
         $this->request = new VerifyPaymentRequest($this->getHttpClient(), $this->getHttpRequest());
 
         $this->request->initialize([
-            'merchantCode'    => 'test_merchant',
+            'merchantCode'    => 'epay_payment',
             'testMode'        => true,
             'amount'          => 100,
             'referenceNumber' => 'GDFG89',

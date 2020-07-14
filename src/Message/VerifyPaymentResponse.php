@@ -25,7 +25,7 @@ class VerifyPaymentResponse extends AbstractResponse
      */
     public function getResponseText()
     {
-        return (string) $this->data->response_code;
+        return (string) trim($this->data->response_code);
     }
 
     /**
@@ -33,6 +33,8 @@ class VerifyPaymentResponse extends AbstractResponse
      */
     public function isSuccessful()
     {
-        return in_array($this->getResponseText(), ['Success']);
+        $string = strtolower($this->getResponseText());
+
+        return in_array($string, ['success']);
     }
 }
