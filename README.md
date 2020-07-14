@@ -29,7 +29,7 @@ composer require league/omnipay sudiptpa/omnipay-esewa
 
     $gateway = Omnipay::create('Esewa_Secure');
 
-    $gateway->setMerchantCode('test_merchant');
+    $gateway->setMerchantCode('epay_payment');
     $gateway->setTestMode(true);
 
     try {
@@ -57,7 +57,7 @@ composer require league/omnipay sudiptpa/omnipay-esewa
 ```php
     $gateway = Omnipay::create('Esewa_Secure');
 
-    $gateway->setMerchantCode('test_merchant');
+    $gateway->setMerchantCode('epay_payment');
     $gateway->setTestMode(true);
 
     $response = $gateway->verifyPayment([

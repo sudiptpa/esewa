@@ -14,7 +14,7 @@ class SecureGatewayTest extends GatewayTestCase
         parent::setUp();
 
         $this->gateway = new SecureGateway($this->getHttpClient(), $this->getHttpRequest());
-        $this->gateway->setMerchantCode('test_merchant');
+        $this->gateway->setMerchantCode('epay_payment');
     }
 
     public function testPurchase()

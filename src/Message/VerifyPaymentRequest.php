@@ -15,6 +15,11 @@ class VerifyPaymentRequest extends AbstractRequest
     protected $verifyEndPoint = 'epay/transrec';
 
     /**
+     * @var string
+     */
+    protected $userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36';
+
+    /**
      * @return string
      */
     public function getData()
@@ -28,19 +33,39 @@ class VerifyPaymentRequest extends AbstractRequest
     }
 
     /**
+     * @return string
+     */
+    public function getUserAgent()
+    {
+        $userAgent = $this->userAgent;
+
+        if (isset($_SERVER['HTTP_USER_AGENT'])) {
+            $userAgent = $_SERVER['HTTP_USER_AGENT'];
+        }
+
+        return $userAgent;
+    }
+
+    /**
      * @param $data
      *
-     * @return \Omnipay\Esewa\Message\OrderResponse
+     * @return \Omnipay\Esewa\Message\VerifyPaymentResponse
      */
     public function sendData($data)
     {
-        $endPoint = $this->getEndpoint().'?'.http_build_query($data);
+        $endPoint = $this->getEndpoint();
 
-        $httpResponse = $this->httpClient->request('GET', $endPoint);
+        $headers = [
+            'User-Agent' => $this->getUserAgent(),
+            'Accept' => "application/xml",
+            'Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8',
+        ];
 
-        $data = new SimpleXMLElement($httpResponse->getBody()->getContents());
+        $httpResponse = $this->httpClient->request('POST', $endPoint, $headers, http_build_query($data));
 
-        return $this->response = new VerifyPaymentResponse($this, $data);
+        $content = new SimpleXMLElement($httpResponse->getBody()->getContents());
+
+        return $this->response = new VerifyPaymentResponse($this, $content);
     }
 
     /**
@@ -50,6 +75,6 @@ class VerifyPaymentRequest extends AbstractRequest
     {
         $endPoint = $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
 
-        return $endPoint.$this->verifyEndPoint;
+        return $endPoint . $this->verifyEndPoint;
     }
 }
