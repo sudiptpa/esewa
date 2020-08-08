@@ -52,6 +52,8 @@ composer require league/omnipay sudiptpa/omnipay-esewa
     }
 ```
 
+After successful payment and redirect back to merchant site, you need to now verify the payment with another API request.
+
 ### Verify Payment
 
 ```php
@@ -92,3 +94,7 @@ If you are having general issues with Omnipay Esewa, drop an email to sudiptpa@g
 
 If you believe you have found a bug, please report it using the [GitHub issue tracker](https://github.com/sudiptpa/esewa/issues),
 or better yet, fork the library and submit a pull request.
+
+## License
+
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
