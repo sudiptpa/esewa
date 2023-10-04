@@ -18,8 +18,8 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
 
     /**
      * @param RequestInterface $request
-     * @param $data
-     * @param $redirectUrl
+     * @param                  $data
+     * @param                  $redirectUrl
      */
     public function __construct(RequestInterface $request, $data, $redirectUrl)
     {
