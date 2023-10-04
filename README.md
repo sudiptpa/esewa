@@ -6,7 +6,6 @@
 processing library for PHP. This package implements eSewa support for Omnipay.
 
 [![StyleCI](https://github.styleci.io/repos/75586885/shield?branch=master&format=plastic)](https://github.styleci.io/repos/75586885)
-[![Build Status](https://travis-ci.org/sudiptpa/esewa.svg?branch=master)](https://travis-ci.org/sudiptpa/esewa)
 [![Latest Stable Version](https://poser.pugx.org/sudiptpa/omnipay-esewa/v/stable)](https://packagist.org/packages/sudiptpa/omnipay-esewa)
 [![Total Downloads](https://poser.pugx.org/sudiptpa/omnipay-esewa/downloads)](https://packagist.org/packages/sudiptpa/omnipay-esewa)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/sudiptpa/esewa/master/LICENSE)
