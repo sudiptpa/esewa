@@ -25,6 +25,7 @@ class SecureGateway extends AbstractGateway
         return [
             'merchantCode' => '',
             'testMode'     => false,
+            'secretKey'    => '',
         ];
     }
 
@@ -158,6 +159,24 @@ class SecureGateway extends AbstractGateway
     public function setReferenceNumber($value)
     {
         return $this->setParameter('referenceNumber', $value);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setSecretKey($value)
+    {
+        return $this->setParameter('secretKey', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSecretKey()
+    {
+        return $this->getParameter('secretKey');
     }
 
     /**

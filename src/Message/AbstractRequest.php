@@ -10,12 +10,12 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     /**
      * @var string
      */
-    protected $liveEndpoint = 'https://esewa.com.np/';
+    protected $liveEndpoint = 'https://epay.esewa.com.np/';
 
     /**
      * @var string
      */
-    protected $testEndpoint = 'https://uat.esewa.com.np/';
+    protected $testEndpoint = 'https://rc.esewa.com.np/';
 
     /**
      * @return string
@@ -147,5 +147,76 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function setReferenceNumber($value)
     {
         return $this->setParameter('referenceNumber', $value);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setSignedFieldsName($value)
+    {
+        return $this->setParameter('signedFields', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSignedFieldsName()
+    {
+        return $this->getParameter('signedFields') ?: "total_amount,transaction_uuid,product_code";
+    }
+
+    /**
+     * @param $value
+     */
+    public function setSignature($value)
+    {
+        return $this->setParameter('signature', $this->generateSignature($value));
+    }
+
+    /**
+     * @return string
+     */
+    public function getSignature()
+    {
+        if ($signature = $this->getParameter('signature')) {
+            return $signature;
+        }
+
+        $value = http_build_query([
+            'total_amount' => $this->getTotalAmount(),
+            'transaction_uuid' => $this->getProductCode(),
+            'product_code' => $this->getMerchantCode(),
+        ], '', ',');
+
+        return $this->generateSignature($value);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setSecretKey($value)
+    {
+        return $this->setParameter('secretKey', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSecretKey()
+    {
+        return $this->getParameter('secretKey');
+    }
+
+    /**
+     * Generates the signature for the form input data.
+     * 
+     * @param string $message
+     * @return string
+     */
+    public function generateSignature($message)
+    {
+        $signedMessage = hash_hmac('sha256', $message, $this->getSecretKey(), true);
+
+        return base64_encode($signedMessage);
     }
 }
