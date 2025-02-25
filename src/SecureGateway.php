@@ -198,4 +198,14 @@ class SecureGateway extends AbstractGateway
     {
         return $this->createRequest('\Omnipay\Esewa\Message\VerifyPaymentRequest', $parameters);
     }
+
+    /**
+     * @param array $parameters
+     *
+     * @return \Omnipay\Esewa\Message\CheckStatusRequest
+     */
+    public function checkStatus(array $parameters = [])
+    {
+        return $this->createRequest('\Omnipay\Esewa\Message\CheckStatusRequest', $parameters);
+    }
 }
