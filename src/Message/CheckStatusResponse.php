@@ -33,8 +33,37 @@ class CheckStatusResponse extends AbstractResponse
      */
     public function isSuccessful()
     {
+        return $this->checkStatus('complete');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPending()
+    {
+        return $this->checkStatus('pending');
+    }
+
+    /**
+     * Is the transaction cancelled by the user?
+     *
+     * @return boolean
+     */
+    public function isCancelled()
+    {
+        return $this->checkStatus('canceled');
+    }
+
+    /**
+     * Extracts status from the response.
+     * 
+     * @param mixed $type
+     * @return bool
+     */
+    public function checkStatus($type)
+    {
         $string = strtolower($this->getResponseText());
 
-        return in_array($string, ['complete']);
+        return in_array($string, [$type]);
     }
 }
