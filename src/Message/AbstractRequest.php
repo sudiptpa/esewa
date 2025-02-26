@@ -2,11 +2,15 @@
 
 namespace Omnipay\Esewa\Message;
 
+use Omnipay\Esewa\GatewayTrait;
+
 /**
  * Class AbstractRequest.
  */
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
+    use GatewayTrait;
+
     /**
      * @var string
      */
@@ -197,26 +201,5 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function setSecretKey($value)
     {
         return $this->setParameter('secretKey', $value);
-    }
-
-    /**
-     * @return string
-     */
-    public function getSecretKey()
-    {
-        return $this->getParameter('secretKey');
-    }
-
-    /**
-     * Generates the signature for the form input data.
-     * 
-     * @param string $message
-     * @return string
-     */
-    public function generateSignature($message)
-    {
-        $signedMessage = hash_hmac('sha256', $message, $this->getSecretKey(), true);
-
-        return base64_encode($signedMessage);
     }
 }

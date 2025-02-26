@@ -9,6 +9,8 @@ use Omnipay\Common\AbstractGateway;
  */
 class SecureGateway extends AbstractGateway
 {
+    use GatewayTrait;
+
     /**
      * @return string
      */
@@ -169,14 +171,6 @@ class SecureGateway extends AbstractGateway
     public function setSecretKey($value)
     {
         return $this->setParameter('secretKey', $value);
-    }
-
-    /**
-     * @return string
-     */
-    public function getSecretKey()
-    {
-        return $this->getParameter('secretKey');
     }
 
     /**
