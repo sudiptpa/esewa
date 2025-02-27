@@ -22,8 +22,8 @@ class CheckStatusRequest extends AbstractRequest
         $this->validate('totalAmount', 'productCode');
 
         return [
-            'product_code'   => $this->getMerchantCode(),
-            'total_amount'  => $this->getTotalAmount(),
+            'product_code'       => $this->getMerchantCode(),
+            'total_amount'       => $this->getTotalAmount(),
             'transaction_uuid'   => $this->getProductCode(),
         ];
     }
@@ -37,7 +37,7 @@ class CheckStatusRequest extends AbstractRequest
     {
         $httpResponse = $this->httpClient->request(
             'GET',
-            "{$this->getEndpoint()}?" . http_build_query($data),
+            "{$this->getEndpoint()}?".http_build_query($data),
             []
         );
 

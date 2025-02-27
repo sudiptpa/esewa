@@ -166,7 +166,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      */
     public function getSignedFieldsName()
     {
-        return $this->getParameter('signedFields') ?: "total_amount,transaction_uuid,product_code";
+        return $this->getParameter('signedFields') ?: 'total_amount,transaction_uuid,product_code';
     }
 
     /**
@@ -187,9 +187,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         }
 
         $value = http_build_query([
-            'total_amount' => $this->getTotalAmount(),
+            'total_amount'     => $this->getTotalAmount(),
             'transaction_uuid' => $this->getProductCode(),
-            'product_code' => $this->getMerchantCode(),
+            'product_code'     => $this->getMerchantCode(),
         ], '', ',');
 
         return $this->generateSignature($value);

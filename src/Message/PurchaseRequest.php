@@ -22,17 +22,17 @@ class PurchaseRequest extends AbstractRequest
         $this->validate('merchantCode', 'amount', 'totalAmount', 'productCode', 'failedUrl', 'returnUrl');
 
         return [
-            'amount'   => $this->getAmount(),
-            'tax_amount' => $this->getTaxAmount() ?: 0,
-            'total_amount'  => $this->getTotalAmount(),
+            'amount'                    => $this->getAmount(),
+            'tax_amount'                => $this->getTaxAmount() ?: 0,
+            'total_amount'              => $this->getTotalAmount(),
             'product_delivery_charge'   => $this->getDeliveryCharge() ?: 0,
-            'product_service_charge'   => $this->getServiceCharge() ?: 0,
-            'transaction_uuid'   => $this->getProductCode(),
-            'product_code'   => $this->getMerchantCode(),
-            'success_url'    => $this->getReturnUrl(),
-            'failure_url'    => $this->getFailedUrl(),
-            'signed_field_names' => $this->getSignedFieldsName(),
-            'signature' => $this->getSignature(),
+            'product_service_charge'    => $this->getServiceCharge() ?: 0,
+            'transaction_uuid'          => $this->getProductCode(),
+            'product_code'              => $this->getMerchantCode(),
+            'success_url'               => $this->getReturnUrl(),
+            'failure_url'               => $this->getFailedUrl(),
+            'signed_field_names'        => $this->getSignedFieldsName(),
+            'signature'                 => $this->getSignature(),
         ];
     }
 
@@ -53,6 +53,6 @@ class PurchaseRequest extends AbstractRequest
     {
         $endPoint = $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
 
-        return $endPoint . $this->purchaseEndPoint;
+        return "{$endPoint}{$this->purchaseEndPoint}";
     }
 }

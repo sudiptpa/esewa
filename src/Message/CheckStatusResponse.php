@@ -12,7 +12,7 @@ class CheckStatusResponse extends AbstractResponse
 {
     /**
      * @param RequestInterface $request
-     * @param $data
+     * @param                  $data
      */
     public function __construct(RequestInterface $request, $data)
     {
@@ -47,7 +47,7 @@ class CheckStatusResponse extends AbstractResponse
     /**
      * Is the transaction cancelled by the user?
      *
-     * @return boolean
+     * @return bool
      */
     public function isCancelled()
     {
@@ -58,6 +58,7 @@ class CheckStatusResponse extends AbstractResponse
      * Extracts status from the response.
      *
      * @param mixed $type
+     * 
      * @return bool
      */
     public function checkStatus($type)
