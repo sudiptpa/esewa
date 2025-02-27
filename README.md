@@ -77,7 +77,7 @@ After successful payment and redirect back to merchant site, you need to now ver
 
 ## Laravel Integration
 
-Please follow the [eSewa Online Payment Gateway Integration](https://sujipthapa.co/blog/esewa-online-payment-gateway-integration-with-php) and follow step by step guidlines.
+Please follow the [eSewa Online Payment Gateway Integration](https://sujipthapa.com/blog/esewa-payment-gateway-integration-with-laravel) and follow step by step guidlines.
 
 ## Official Doc
 
