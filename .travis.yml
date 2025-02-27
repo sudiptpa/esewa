@@ -7,6 +7,11 @@ php:
   - 7.2
   - 7.3
   - 7.4
+  - 8.0
+  - 8.1
+  - 8.2
+  - 8.3
+  - 8.4
 
 env:
   global:
@@ -27,4 +32,3 @@ install:
   - if [[ $setup = 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable; fi
 
 script: vendor/bin/phpcs --exclude=Generic.Files.LineLength src/ --standard=PSR2 src && vendor/bin/phpunit --coverage-text
-

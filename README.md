@@ -29,6 +29,7 @@ composer require league/omnipay sudiptpa/omnipay-esewa
     $gateway = Omnipay::create('Esewa_Secure');
 
     $gateway->setMerchantCode('epay_payment');
+    $gateway->setSecretKey('secret_key_provided_by_esewa');
     $gateway->setTestMode(true);
 
     try {
@@ -73,6 +74,7 @@ After successful payment and redirect back to merchant site, you need to now ver
 
     // Failed
 ```
+
 ## Laravel Integration
 
 Please follow the [eSewa Online Payment Gateway Integration](https://sujipthapa.co/blog/esewa-online-payment-gateway-integration-with-php) and follow step by step guidlines.

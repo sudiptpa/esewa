@@ -14,7 +14,7 @@ trait GatewayTrait
 
     /**
      * Generates the signature for the message.
-     * 
+     *
      * @param mixed $message
      * @return string
      */

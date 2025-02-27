@@ -56,7 +56,7 @@ class CheckStatusResponse extends AbstractResponse
 
     /**
      * Extracts status from the response.
-     * 
+     *
      * @param mixed $type
      * @return bool
      */

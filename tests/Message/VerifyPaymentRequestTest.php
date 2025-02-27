@@ -9,7 +9,10 @@ use Omnipay\Tests\TestCase;
  */
 class VerifyPaymentRequestTest extends TestCase
 {
-    public function setUp()
+    /**
+     * @return void
+     */
+    public function setUp(): void
     {
         $this->request = new VerifyPaymentRequest($this->getHttpClient(), $this->getHttpRequest());
 

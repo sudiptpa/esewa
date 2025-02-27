@@ -9,7 +9,10 @@ use Omnipay\Tests\TestCase;
  */
 class PurchaseRequestTest extends TestCase
 {
-    public function setUp()
+    /**
+     * @return void
+     */
+    public function setUp(): void
     {
         $this->request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
 
@@ -34,11 +37,11 @@ class PurchaseRequestTest extends TestCase
         $this->assertFalse($response->isSuccessful());
         $this->assertTrue($response->isRedirect());
 
-        $this->assertSame('https://esewa.com.np/epay/main', $response->getRedirectUrl());
+        $this->assertSame('https://epay.esewa.com.np/api/epay/main/v2/form', $response->getRedirectUrl());
         $this->assertSame('POST', $response->getRedirectMethod());
 
         $data = $response->getData();
-        $this->assertArrayHasKey('amt', $data);
-        $this->assertSame('100.00', $data['amt']);
+        $this->assertArrayHasKey('amount', $data);
+        $this->assertSame('100.00', $data['amount']);
     }
 }
