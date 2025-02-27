@@ -2,20 +2,24 @@
 
 namespace Omnipay\Esewa\Message;
 
+use Omnipay\Esewa\GatewayTrait;
+
 /**
  * Class AbstractRequest.
  */
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
-    /**
-     * @var string
-     */
-    protected $liveEndpoint = 'https://esewa.com.np/';
+    use GatewayTrait;
 
     /**
      * @var string
      */
-    protected $testEndpoint = 'https://uat.esewa.com.np/';
+    protected $liveEndpoint = 'https://epay.esewa.com.np/';
+
+    /**
+     * @var string
+     */
+    protected $testEndpoint = 'https://rc.esewa.com.np/';
 
     /**
      * @return string
@@ -147,5 +151,55 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function setReferenceNumber($value)
     {
         return $this->setParameter('referenceNumber', $value);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setSignedFieldsName($value)
+    {
+        return $this->setParameter('signedFields', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSignedFieldsName()
+    {
+        return $this->getParameter('signedFields') ?: 'total_amount,transaction_uuid,product_code';
+    }
+
+    /**
+     * @param $value
+     */
+    public function setSignature($value)
+    {
+        return $this->setParameter('signature', $this->generateSignature($value));
+    }
+
+    /**
+     * @return string
+     */
+    public function getSignature()
+    {
+        if ($signature = $this->getParameter('signature')) {
+            return $signature;
+        }
+
+        $value = http_build_query([
+            'total_amount'     => $this->getTotalAmount(),
+            'transaction_uuid' => $this->getProductCode(),
+            'product_code'     => $this->getMerchantCode(),
+        ], '', ',');
+
+        return $this->generateSignature($value);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setSecretKey($value)
+    {
+        return $this->setParameter('secretKey', $value);
     }
 }

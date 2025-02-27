@@ -9,6 +9,8 @@ use Omnipay\Common\AbstractGateway;
  */
 class SecureGateway extends AbstractGateway
 {
+    use GatewayTrait;
+
     /**
      * @return string
      */
@@ -25,6 +27,7 @@ class SecureGateway extends AbstractGateway
         return [
             'merchantCode' => '',
             'testMode'     => false,
+            'secretKey'    => '',
         ];
     }
 
@@ -161,6 +164,16 @@ class SecureGateway extends AbstractGateway
     }
 
     /**
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setSecretKey($value)
+    {
+        return $this->setParameter('secretKey', $value);
+    }
+
+    /**
      * @param array $parameters
      *
      * @return \Omnipay\Esewa\Message\PurchaseRequest
@@ -178,5 +191,15 @@ class SecureGateway extends AbstractGateway
     public function verifyPayment(array $parameters = [])
     {
         return $this->createRequest('\Omnipay\Esewa\Message\VerifyPaymentRequest', $parameters);
+    }
+
+    /**
+     * @param array $parameters
+     *
+     * @return \Omnipay\Esewa\Message\CheckStatusRequest
+     */
+    public function checkStatus(array $parameters = [])
+    {
+        return $this->createRequest('\Omnipay\Esewa\Message\CheckStatusRequest', $parameters);
     }
 }

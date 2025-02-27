@@ -1,45 +1,53 @@
 {
-   "name":"sudiptpa/omnipay-esewa",
-   "type":"library",
-   "description":"eSewa API driver for the Omnipay payment processing library.",
-   "keywords":[
-      "gateway",
-      "merchant",
-      "omnipay",
-      "pay",
-      "payment",
-      "esewa"
-   ],
-   "homepage":"https://github.com/sudiptpa/esewa",
-   "license":"MIT",
-   "authors":[
-      {
-         "name":"Sujip Thapa",
-         "email":"sudiptpa@gmail.com"
-      }
-   ],
-   "autoload":{
-      "psr-4":{
-         "Omnipay\\Esewa\\":"src/"
-      }
-   },
-   "require":{
-      "omnipay/common":"^3"
-   },
-   "require-dev":{
-      "omnipay/tests":"^3",
-      "squizlabs/php_codesniffer":"^3",
-      "phpro/grumphp":"^0.14.0"
-   },
-   "extra":{
-      "branch-alias":{
-         "dev-master":"1.0.x-dev"
-      }
-   },
-   "scripts":{
-      "test":"vendor/bin/phpunit",
-      "check-style":"phpcs -p --standard=PSR2 src/",
-      "fix-style":"phpcbf -p --standard=PSR2 src/"
-   },
-   "prefer-stable":true
+  "name": "sudiptpa/omnipay-esewa",
+  "type": "library",
+  "description": "eSewa API driver for the Omnipay payment processing library.",
+  "keywords": [
+    "gateway",
+    "merchant",
+    "omnipay",
+    "pay",
+    "payment",
+    "esewa"
+  ],
+  "homepage": "https://github.com/sudiptpa/esewa",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sujip Thapa",
+      "email": "sudiptpa@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Omnipay\\Esewa\\": "src/"
+    }
+  },
+  "require": {
+    "omnipay/common": "^3",
+    "symfony/http-client": "^7.2"
+  },
+  "require-dev": {
+    "omnipay/tests": "^4",
+    "squizlabs/php_codesniffer": "^3",
+    "phpro/grumphp": "^2.10.0",
+    "http-interop/http-factory-guzzle": "^1.2"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "check-style": "phpcs -p --standard=PSR2 src/",
+    "fix-style": "phpcbf -p --standard=PSR2 src/"
+  },
+  "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true,
+      "phpro/grumphp": true
+    }
+  }
 }
