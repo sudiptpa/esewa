@@ -16,12 +16,19 @@
     {
       "name": "Sujip Thapa",
       "email": "sudiptpa@gmail.com"
+    },
+    {
+      "name": "Pralhad Kumar Shrestha",
+      "email": "pralhad.shrestha05@gmail.com"
     }
   ],
   "autoload": {
     "psr-4": {
       "Omnipay\\Esewa\\": "src/"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
   "require": {
     "omnipay/common": "^3",
