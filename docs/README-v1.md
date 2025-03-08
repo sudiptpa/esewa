@@ -18,8 +18,6 @@ Omnipay is installed via [Composer](http://getcomposer.org/). To install, simply
 composer require league/omnipay sudiptpa/omnipay-esewa
 ```
 
-**Looking for ePay v1? Check [this documentation](./docs/README-v1.md) for installation instructions.**
-
 ## Basic Usage
 
 ### Purchase
@@ -31,7 +29,6 @@ composer require league/omnipay sudiptpa/omnipay-esewa
     $gateway = Omnipay::create('Esewa_Secure');
 
     $gateway->setMerchantCode('epay_payment');
-    $gateway->setSecretKey('secret_key_provided_by_esewa');
     $gateway->setTestMode(true);
 
     try {
@@ -54,7 +51,7 @@ composer require league/omnipay sudiptpa/omnipay-esewa
     }
 ```
 
-After successful payment and redirect back to merchant site, you need to verify the payment response.
+After successful payment and redirect back to merchant site, you need to now verify the payment with another API request.
 
 ### Verify Payment
 
@@ -62,48 +59,24 @@ After successful payment and redirect back to merchant site, you need to verify 
     $gateway = Omnipay::create('Esewa_Secure');
 
     $gateway->setMerchantCode('epay_payment');
-    $gateway->setSecretKey('secret_key_provided_by_esewa');
     $gateway->setTestMode(true);
 
-    $payload = json_decode(base64_decode($_GET['data']), true);
+    $response = $gateway->verifyPayment([
+        'amount' => 100,
+        'referenceNumber' => 'GDFG89',
+        'productCode' => 'gadfg-gadf',
+    ])->send();
 
-    $signature = $gateway->generateSignature(generateSignature($payload));
-    if ($signature === $payload['signature']) {
-        // Verified
-    } else {
-        // Unverified
-    }
-```
-
-You can also check the status of payment if no any response is received when redirected back to merchant's site.
-
-### Check Status
-
-```php
-    $gateway = Omnipay::create('Esewa_Secure');
-
-    $gateway->setMerchantCode('epay_payment');
-    $gateway->setSecretKey('secret_key_provided_by_esewa');
-    $gateway->setTestMode(true);
-
-    $payload = [
-        'totalAmount' => 100,
-        'productCode' => 'ABAC2098',
-    ];
-
-    $response = $gateway->checkStatus($payload)->send();
     if ($response->isSuccessful()) {
         // Success
     }
+
+    // Failed
 ```
-
-## Working Example
-
-Want to see working examples before integrating them into your project? View the examples **[here](https://github.com/pralhadstha/payment-gateways-examples)**
 
 ## Laravel Integration
 
-Please follow the [eSewa Online Payment Gateway Integration](https://sujipthapa.com/blog/esewa-payment-gateway-integration-with-laravel) and follow step by step guidlines.
+Please follow the [eSewa Online Payment Gateway Integration](https://sujipthapa.com/blog/esewa-online-payment-gateway-integration-with-php) and follow step by step guidlines.
 
 ## Official Doc
 
