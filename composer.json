@@ -30,6 +30,12 @@
     "symfony/http-client": "^6.4 || ^7.0 || ^8.0",
     "nyholm/psr7": "^1.8"
   },
+  "suggest": {
+    "sudiptpa/omnipay-esewa": "Legacy package name. This SDK has moved to sudiptpa/esewa-payment."
+  },
+  "conflict": {
+    "sudiptpa/omnipay-esewa": "*"
+  },
   "autoload": {
     "psr-4": {
       "EsewaPayment\\": "src/"
@@ -42,7 +48,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "2.0.x-dev"
+      "dev-master": "3.0.x-dev"
     }
   },
   "scripts": {
