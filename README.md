@@ -1,94 +1,60 @@
-# Omnipay: eSewa
+# EsewaPayment PHP SDK
 
-**eSewa driver for the Omnipay PHP payment processing library**
+A modern, framework-agnostic eSewa ePay v2 SDK for PHP.
 
-[Omnipay](https://github.com/thephpleague/omnipay) is a framework agnostic, multi-gateway payment
-processing library for PHP. This package implements eSewa support for Omnipay.
+## Highlights
 
-[![StyleCI](https://github.styleci.io/repos/75586885/shield?branch=master&format=plastic)](https://github.styleci.io/repos/75586885)
-[![Build Status](https://travis-ci.org/sudiptpa/esewa.svg?branch=master)](https://travis-ci.org/sudiptpa/esewa)
-[![Latest Stable Version](https://poser.pugx.org/sudiptpa/omnipay-esewa/v/stable)](https://packagist.org/packages/sudiptpa/omnipay-esewa)
-[![Total Downloads](https://poser.pugx.org/sudiptpa/omnipay-esewa/downloads)](https://packagist.org/packages/sudiptpa/omnipay-esewa)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/sudiptpa/esewa/master/LICENSE)
+- ePay v2 checkout intent generation
+- HMAC-SHA256 + base64 signature handling
+- Callback/return payload verification
+- Status check API client
+- Anti-fraud field consistency checks
+- PSR-18 transport architecture
+- PHP 8.3 to 8.5 support
 
 ## Installation
 
-Omnipay is installed via [Composer](http://getcomposer.org/). To install, simply require `league/omnipay` and `sudiptpa/omnipay-esewa` with Composer:
-
-```
-composer require league/omnipay sudiptpa/omnipay-esewa
+```bash
+composer require sudiptpa/esewa-payment
 ```
 
-## Basic Usage
+Optional adapters used in examples:
 
-### Purchase
+```bash
+composer require symfony/http-client nyholm/psr7
+```
+
+## Quick Start
 
 ```php
-    use Omnipay\Omnipay;
-    use Exception;
+use EsewaPayment\Client\EsewaGateway;
+use EsewaPayment\Config\Config;
+use EsewaPayment\Infrastructure\Transport\Psr18Transport;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Symfony\Component\HttpClient\Psr18Client;
 
-    $gateway = Omnipay::create('Esewa_Secure');
+$config = Config::fromArray([
+    'merchant_code' => 'EPAYTEST',
+    'secret_key' => 'YOUR_SECRET',
+    'environment' => 'uat',
+]);
 
-    $gateway->setMerchantCode('epay_payment');
-    $gateway->setTestMode(true);
-
-    try {
-        $response = $gateway->purchase([
-            'amount' => 100,
-            'deliveryCharge' => 0,
-            'serviceCharge' => 0,
-            'taxAmount' => 0,
-            'totalAmount' => 100,
-            'productCode' => 'ABAC2098',
-            'returnUrl' => 'https://merchant.com/payment/1/complete',
-            'failedUrl' => 'https://merchant.com/payment/1/failed',
-        ])->send();
-
-        if ($response->isRedirect()) {
-            $response->redirect();
-        }
-    } catch (Exception $e) {
-        return $e->getMessage();
-    }
+$gateway = new EsewaGateway(
+    $config,
+    new Psr18Transport(new Psr18Client(), new Psr17Factory())
+);
 ```
 
-### Verify Payment
+## Modules
 
-```php
-    $gateway = Omnipay::create('Esewa_Secure');
+- `checkout()->createIntent(...)`
+- `callback()->verify(...)`
+- `transactions()->status(...)`
 
-    $gateway->setMerchantCode('epay_payment');
-    $gateway->setTestMode(true);
+## Development
 
-    $response = $gateway->verifyPayment([
-        'amount' => 100,
-        'referenceNumber' => 'GDFG89',
-        'productCode' => 'gadfg-gadf',
-    ])->send();
-
-    if ($response->isSuccessful()) {
-        // Success
-    }
-
-    // Failed
+```bash
+composer test
+composer stan
+composer rector:check
 ```
-## Laravel Integration
-
-Please follow the [eSewa Online Payment Gateway Integration](https://sujipthapa.co/blog/esewa-online-payment-gateway-integration-with-php) and follow step by step guidlines.
-
-## Official Doc
-
-Please follow the [Official Doc](https://developer.esewa.com.np) to understand about the parameters and their descriptions.
-
-## Contributing
-
-Contributions are **welcome** and will be fully **credited**.
-
-Contributions can be made via a Pull Request on [Github](https://github.com/sudiptpa/esewa).
-
-## Support
-
-If you are having general issues with Omnipay Esewa, drop an email to sudiptpa@gmail.com for quick support.
-
-If you believe you have found a bug, please report it using the [GitHub issue tracker](https://github.com/sudiptpa/esewa/issues),
-or better yet, fork the library and submit a pull request.

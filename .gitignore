@@ -1,7 +1,9 @@
-/vendor
+/vendor/
+/bin/
 composer.lock
 composer.phar
-phpunit.xml
-php-cs-fixer.phar
-phpcbf.phar
-phpcs.phar
+.phpunit.cache/
+.phpunit.result.cache
+coverage/
+*.cache
+.DS_Store
