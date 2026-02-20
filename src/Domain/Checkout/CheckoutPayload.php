@@ -18,23 +18,24 @@ final class CheckoutPayload
         public readonly string $failureUrl,
         public readonly string $signedFieldNames,
         public readonly string $signature,
-    ) {}
+    ) {
+    }
 
     /** @return array<string,string> */
     public function toArray(): array
     {
         return [
-            'amount' => $this->amount,
-            'tax_amount' => $this->taxAmount,
-            'product_service_charge' => $this->serviceCharge,
+            'amount'                  => $this->amount,
+            'tax_amount'              => $this->taxAmount,
+            'product_service_charge'  => $this->serviceCharge,
             'product_delivery_charge' => $this->deliveryCharge,
-            'total_amount' => $this->totalAmount,
-            'transaction_uuid' => $this->transactionUuid,
-            'product_code' => $this->productCode,
-            'success_url' => $this->successUrl,
-            'failure_url' => $this->failureUrl,
-            'signed_field_names' => $this->signedFieldNames,
-            'signature' => $this->signature,
+            'total_amount'            => $this->totalAmount,
+            'transaction_uuid'        => $this->transactionUuid,
+            'product_code'            => $this->productCode,
+            'success_url'             => $this->successUrl,
+            'failure_url'             => $this->failureUrl,
+            'signed_field_names'      => $this->signedFieldNames,
+            'signature'               => $this->signature,
         ];
     }
 }

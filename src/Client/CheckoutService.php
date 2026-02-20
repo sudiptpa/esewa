@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Client;
 
-use EsewaPayment\Config\GatewayConfig;
 use EsewaPayment\Config\EndpointResolver;
+use EsewaPayment\Config\GatewayConfig;
 use EsewaPayment\Domain\Checkout\CheckoutIntent;
 use EsewaPayment\Domain\Checkout\CheckoutPayload;
 use EsewaPayment\Domain\Checkout\CheckoutRequest;
@@ -31,10 +31,10 @@ final class CheckoutService
         );
 
         $payload = new CheckoutPayload(
-            amount: number_format((float)$request->amount, 2, '.', ''),
-            taxAmount: number_format((float)$request->taxAmount, 2, '.', ''),
-            serviceCharge: number_format((float)$request->serviceCharge, 2, '.', ''),
-            deliveryCharge: number_format((float)$request->deliveryCharge, 2, '.', ''),
+            amount: number_format((float) $request->amount, 2, '.', ''),
+            taxAmount: number_format((float) $request->taxAmount, 2, '.', ''),
+            serviceCharge: number_format((float) $request->serviceCharge, 2, '.', ''),
+            deliveryCharge: number_format((float) $request->deliveryCharge, 2, '.', ''),
             totalAmount: $totalAmount,
             transactionUuid: $request->transactionUuid,
             productCode: $request->productCode,

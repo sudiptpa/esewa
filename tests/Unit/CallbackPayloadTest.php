@@ -42,7 +42,7 @@ final class CallbackPayloadTest extends TestCase
     public function testDecodedDataThrowsWhenRequiredFieldsMissing(): void
     {
         $payload = new CallbackPayload(
-            base64_encode((string)json_encode(['status' => 'COMPLETE'])),
+            base64_encode((string) json_encode(['status' => 'COMPLETE'])),
             'signature'
         );
 
@@ -55,11 +55,11 @@ final class CallbackPayloadTest extends TestCase
     public function testDecodedDataMapsUnknownStatusToUnknown(): void
     {
         $payload = new CallbackPayload(
-            base64_encode((string)json_encode([
-                'status' => 'SOMETHING_NEW',
+            base64_encode((string) json_encode([
+                'status'           => 'SOMETHING_NEW',
                 'transaction_uuid' => 'TXN-1001',
-                'total_amount' => '100.00',
-                'product_code' => 'EPAYTEST',
+                'total_amount'     => '100.00',
+                'product_code'     => 'EPAYTEST',
             ])),
             'signature'
         );

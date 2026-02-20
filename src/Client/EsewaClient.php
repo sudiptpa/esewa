@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Client;
 
-use EsewaPayment\Config\GatewayConfig;
 use EsewaPayment\Config\EndpointResolver;
+use EsewaPayment\Config\GatewayConfig;
 use EsewaPayment\Contracts\TransportInterface;
 use EsewaPayment\Service\CallbackVerifier;
 use EsewaPayment\Service\SignatureService;

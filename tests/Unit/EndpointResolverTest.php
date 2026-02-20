@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Tests\Unit;
 
-use EsewaPayment\Config\GatewayConfig;
 use EsewaPayment\Config\EndpointResolver;
+use EsewaPayment\Config\GatewayConfig;
 use PHPUnit\Framework\TestCase;
 
 final class EndpointResolverTest extends TestCase
@@ -14,8 +14,8 @@ final class EndpointResolverTest extends TestCase
     {
         $config = GatewayConfig::fromArray([
             'merchant_code' => 'EPAYTEST',
-            'secret_key' => 'secret',
-            'environment' => 'uat',
+            'secret_key'    => 'secret',
+            'environment'   => 'uat',
         ]);
 
         $resolver = new EndpointResolver();
@@ -34,8 +34,8 @@ final class EndpointResolverTest extends TestCase
     {
         $config = GatewayConfig::fromArray([
             'merchant_code' => 'EPAYTEST',
-            'secret_key' => 'secret',
-            'environment' => 'production',
+            'secret_key'    => 'secret',
+            'environment'   => 'production',
         ]);
 
         $resolver = new EndpointResolver();
@@ -53,11 +53,11 @@ final class EndpointResolverTest extends TestCase
     public function testUsesOverridesWhenProvided(): void
     {
         $config = GatewayConfig::fromArray([
-            'merchant_code' => 'EPAYTEST',
-            'secret_key' => 'secret',
-            'environment' => 'uat',
+            'merchant_code'     => 'EPAYTEST',
+            'secret_key'        => 'secret',
+            'environment'       => 'uat',
             'checkout_form_url' => 'https://custom.test/form',
-            'status_check_url' => 'https://custom.test/status',
+            'status_check_url'  => 'https://custom.test/status',
         ]);
 
         $resolver = new EndpointResolver();
@@ -66,4 +66,3 @@ final class EndpointResolverTest extends TestCase
         $this->assertSame('https://custom.test/status', $resolver->statusCheckUrl($config));
     }
 }
-

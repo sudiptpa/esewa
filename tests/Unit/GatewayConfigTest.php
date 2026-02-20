@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Tests\Unit;
 
-use EsewaPayment\Config\GatewayConfig;
 use EsewaPayment\Config\Environment;
+use EsewaPayment\Config\GatewayConfig;
 use PHPUnit\Framework\TestCase;
 
 final class GatewayConfigTest extends TestCase
@@ -13,11 +13,11 @@ final class GatewayConfigTest extends TestCase
     public function testFromArrayMapsValuesAndAliases(): void
     {
         $config = GatewayConfig::fromArray([
-            'merchant_code' => 'EPAYTEST',
-            'secret_key' => 'secret',
-            'environment' => 'live',
+            'merchant_code'     => 'EPAYTEST',
+            'secret_key'        => 'secret',
+            'environment'       => 'live',
             'checkout_form_url' => 'https://checkout.test/form',
-            'status_check_url' => 'https://checkout.test/status',
+            'status_check_url'  => 'https://checkout.test/status',
         ]);
 
         $this->assertSame('EPAYTEST', $config->merchantCode);
@@ -50,8 +50,8 @@ final class GatewayConfigTest extends TestCase
 
         GatewayConfig::fromArray([
             'merchant_code' => 'EPAYTEST',
-            'secret_key' => 'secret',
-            'environment' => 'qa',
+            'secret_key'    => 'secret',
+            'environment'   => 'qa',
         ]);
     }
 }

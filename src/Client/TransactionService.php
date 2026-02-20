@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Client;
 
-use EsewaPayment\Config\GatewayConfig;
 use EsewaPayment\Config\EndpointResolver;
+use EsewaPayment\Config\GatewayConfig;
 use EsewaPayment\Contracts\TransportInterface;
+use EsewaPayment\Domain\Transaction\TransactionStatus;
 use EsewaPayment\Domain\Transaction\TransactionStatusPayload;
 use EsewaPayment\Domain\Transaction\TransactionStatusRequest;
-use EsewaPayment\Domain\Transaction\TransactionStatus;
 
 final class TransactionService
 {

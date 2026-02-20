@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace EsewaPayment\Service;
 
 use EsewaPayment\Domain\Verification\CallbackPayload;
-use EsewaPayment\Domain\Verification\VerificationExpectation;
 use EsewaPayment\Domain\Verification\CallbackVerification;
+use EsewaPayment\Domain\Verification\VerificationExpectation;
 use EsewaPayment\Exception\FraudValidationException;
 
 final class CallbackVerifier

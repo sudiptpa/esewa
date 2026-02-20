@@ -20,14 +20,15 @@ final class CallbackData
         public readonly PaymentStatus $status,
         public readonly ?string $transactionCode,
         public readonly array $raw,
-    ) {}
+    ) {
+    }
 
     /** @param array<string,mixed> $data */
     public static function fromArray(array $data): self
     {
-        $totalAmount = (string)($data['total_amount'] ?? '');
-        $transactionUuid = (string)($data['transaction_uuid'] ?? '');
-        $productCode = (string)($data['product_code'] ?? '');
+        $totalAmount = (string) ($data['total_amount'] ?? '');
+        $transactionUuid = (string) ($data['transaction_uuid'] ?? '');
+        $productCode = (string) ($data['product_code'] ?? '');
 
         if ($totalAmount === '' || $transactionUuid === '' || $productCode === '') {
             throw new InvalidPayloadException('Callback data is missing required fields.');
@@ -37,9 +38,9 @@ final class CallbackData
             totalAmount: $totalAmount,
             transactionUuid: $transactionUuid,
             productCode: $productCode,
-            signedFieldNames: (string)($data['signed_field_names'] ?? 'total_amount,transaction_uuid,product_code'),
-            status: PaymentStatus::fromValue((string)($data['status'] ?? null)),
-            transactionCode: isset($data['transaction_code']) ? (string)$data['transaction_code'] : null,
+            signedFieldNames: (string) ($data['signed_field_names'] ?? 'total_amount,transaction_uuid,product_code'),
+            status: PaymentStatus::fromValue((string) ($data['status'] ?? null)),
+            transactionCode: isset($data['transaction_code']) ? (string) $data['transaction_code'] : null,
             raw: $data,
         );
     }
