@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Client;
 
-use EsewaPayment\Config\Config;
+use EsewaPayment\Config\GatewayConfig;
 use EsewaPayment\Config\EndpointResolver;
 use EsewaPayment\Contracts\TransportInterface;
 use EsewaPayment\Service\CallbackVerifier;
 use EsewaPayment\Service\SignatureService;
 
-final class EsewaGateway
+final class EsewaClient
 {
     private readonly CheckoutService $checkout;
     private readonly CallbackService $callback;
     private readonly TransactionService $transactions;
 
     public function __construct(
-        Config $config,
+        GatewayConfig $config,
         TransportInterface $transport,
     ) {
         $endpoints = new EndpointResolver();
@@ -36,6 +36,11 @@ final class EsewaGateway
     public function callback(): CallbackService
     {
         return $this->callback;
+    }
+
+    public function callbacks(): CallbackService
+    {
+        return $this->callback();
     }
 
     public function transactions(): TransactionService

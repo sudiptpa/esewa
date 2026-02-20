@@ -6,7 +6,7 @@ namespace EsewaPayment\Domain\Verification;
 
 use EsewaPayment\Exception\InvalidPayloadException;
 
-final class ReturnPayload
+final class CallbackPayload
 {
     public function __construct(
         public readonly string $data,
@@ -26,8 +26,7 @@ final class ReturnPayload
         );
     }
 
-    /** @return array<string,mixed> */
-    public function decodedData(): array
+    public function decodedData(): CallbackData
     {
         $decoded = base64_decode($this->data, true);
         if ($decoded === false) {
@@ -39,6 +38,6 @@ final class ReturnPayload
             throw new InvalidPayloadException('Callback data is not valid JSON.');
         }
 
-        return $json;
+        return CallbackData::fromArray($json);
     }
 }

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Service;
 
-use EsewaPayment\Domain\Transaction\PaymentStatus;
-use EsewaPayment\Domain\Verification\ReturnPayload;
-use EsewaPayment\Domain\Verification\VerificationContext;
-use EsewaPayment\Domain\Verification\VerificationResult;
+use EsewaPayment\Domain\Verification\CallbackPayload;
+use EsewaPayment\Domain\Verification\VerificationExpectation;
+use EsewaPayment\Domain\Verification\CallbackVerification;
 use EsewaPayment\Exception\FraudValidationException;
 
 final class CallbackVerifier
@@ -16,38 +15,37 @@ final class CallbackVerifier
     {
     }
 
-    public function verify(ReturnPayload $payload, ?VerificationContext $context = null): VerificationResult
+    public function verify(CallbackPayload $payload, ?VerificationExpectation $context = null): CallbackVerification
     {
         $data = $payload->decodedData();
 
-        $totalAmount = (string) ($data['total_amount'] ?? '');
-        $transactionUuid = (string) ($data['transaction_uuid'] ?? '');
-        $productCode = (string) ($data['product_code'] ?? '');
-        $signedFieldNames = (string) ($data['signed_field_names'] ?? 'total_amount,transaction_uuid,product_code');
-        $status = PaymentStatus::fromValue((string) ($data['status'] ?? null));
-        $referenceId = isset($data['transaction_code']) ? (string) $data['transaction_code'] : null;
-
         $validSignature = $this->signatures->verify(
             $payload->signature,
-            $totalAmount,
-            $transactionUuid,
-            $productCode,
-            $signedFieldNames
+            $data->totalAmount,
+            $data->transactionUuid,
+            $data->productCode,
+            $data->signedFieldNames
         );
 
         if (!$validSignature) {
-            return new VerificationResult(false, $status, $referenceId, 'Invalid callback signature.', $data);
+            return new CallbackVerification(
+                false,
+                $data->status,
+                $data->transactionCode,
+                'Invalid callback signature.',
+                $data->raw
+            );
         }
 
         if ($context !== null) {
-            $this->assertConsistent($context, $totalAmount, $transactionUuid, $productCode, $referenceId);
+            $this->assertConsistent($context, $data->totalAmount, $data->transactionUuid, $data->productCode, $data->transactionCode);
         }
 
-        return new VerificationResult(true, $status, $referenceId, 'Callback verified.', $data);
+        return new CallbackVerification(true, $data->status, $data->transactionCode, 'Callback verified.', $data->raw);
     }
 
     private function assertConsistent(
-        VerificationContext $context,
+        VerificationExpectation $context,
         string $totalAmount,
         string $transactionUuid,
         string $productCode,

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Client;
 
-use EsewaPayment\Domain\Verification\ReturnPayload;
-use EsewaPayment\Domain\Verification\VerificationContext;
-use EsewaPayment\Domain\Verification\VerificationResult;
+use EsewaPayment\Domain\Verification\CallbackPayload;
+use EsewaPayment\Domain\Verification\VerificationExpectation;
+use EsewaPayment\Domain\Verification\CallbackVerification;
 use EsewaPayment\Service\CallbackVerifier;
 
 final class CallbackService
@@ -15,7 +15,12 @@ final class CallbackService
     {
     }
 
-    public function verify(ReturnPayload $payload, ?VerificationContext $context = null): VerificationResult
+    public function verifyCallback(CallbackPayload $payload, ?VerificationExpectation $context = null): CallbackVerification
+    {
+        return $this->verify($payload, $context);
+    }
+
+    public function verify(CallbackPayload $payload, ?VerificationExpectation $context = null): CallbackVerification
     {
         return $this->verifier->verify($payload, $context);
     }

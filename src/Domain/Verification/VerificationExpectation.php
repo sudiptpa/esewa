@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Domain\Verification;
 
-final class VerificationContext
+final class VerificationExpectation
 {
     public function __construct(
         public readonly string $totalAmount,

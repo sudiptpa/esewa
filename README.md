@@ -1,16 +1,38 @@
 # EsewaPayment PHP SDK
 
-A modern, framework-agnostic eSewa ePay v2 SDK for PHP.
+Framework-agnostic eSewa ePay v2 SDK for modern PHP applications.
+
+[![CI](https://github.com/sudiptpa/esewa/actions/workflows/ci.yml/badge.svg)](https://github.com/sudiptpa/esewa/actions/workflows/ci.yml)
+[![Latest Version](https://img.shields.io/packagist/v/sudiptpa/esewa-payment.svg)](https://packagist.org/packages/sudiptpa/esewa-payment)
+[![Total Downloads](https://img.shields.io/packagist/dt/sudiptpa/esewa-payment.svg)](https://packagist.org/packages/sudiptpa/esewa-payment/stats)
+[![PHP Version](https://img.shields.io/packagist/php-v/sudiptpa/esewa-payment.svg)](https://packagist.org/packages/sudiptpa/esewa-payment)
+[![License](https://img.shields.io/packagist/l/sudiptpa/esewa-payment.svg)](LICENSE)
 
 ## Highlights
 
-- ePay v2 checkout intent generation
-- HMAC-SHA256 + base64 signature handling
-- Callback/return payload verification
-- Status check API client
-- Anti-fraud field consistency checks
-- PSR-18 transport architecture
-- PHP 8.3 to 8.5 support
+- ePay v2 checkout intent generation (`/v2/form`)
+- HMAC-SHA256 + base64 signature generation and verification
+- Callback verification with anti-fraud field consistency checks
+- Status check API support with typed status mapping
+- Model-first request/payload/result objects
+- PSR-18 transport integration
+- PHP `8.1` to `8.5` support
+- PHPUnit + PHPStan + CI matrix
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Core API Shape](#core-api-shape)
+- [Checkout Flow](#checkout-flow)
+- [Callback Verification Flow](#callback-verification-flow)
+- [Transaction Status Flow](#transaction-status-flow)
+- [Configuration Patterns](#configuration-patterns)
+- [Framework Integration Examples](#framework-integration-examples)
+- [Custom Transport and Testing](#custom-transport-and-testing)
+- [Error Handling](#error-handling)
+- [Migration Notes](#migration-notes)
+- [Development](#development)
 
 ## Installation
 
@@ -18,7 +40,7 @@ A modern, framework-agnostic eSewa ePay v2 SDK for PHP.
 composer require sudiptpa/esewa-payment
 ```
 
-Optional adapters used in examples:
+For PSR-18 usage examples:
 
 ```bash
 composer require symfony/http-client nyholm/psr7
@@ -27,29 +49,279 @@ composer require symfony/http-client nyholm/psr7
 ## Quick Start
 
 ```php
-use EsewaPayment\Client\EsewaGateway;
-use EsewaPayment\Config\Config;
+<?php
+
+declare(strict_types=1);
+
+use EsewaPayment\Client\EsewaClient;
+use EsewaPayment\Config\GatewayConfig;
 use EsewaPayment\Infrastructure\Transport\Psr18Transport;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Symfony\Component\HttpClient\Psr18Client;
 
-$config = Config::fromArray([
+$config = GatewayConfig::fromArray([
     'merchant_code' => 'EPAYTEST',
-    'secret_key' => 'YOUR_SECRET',
-    'environment' => 'uat',
+    'secret_key' => $_ENV['ESEWA_SECRET_KEY'],
+    'environment' => 'uat', // uat|test|sandbox|production|prod|live
 ]);
 
-$gateway = new EsewaGateway(
+$client = new EsewaClient(
     $config,
     new Psr18Transport(new Psr18Client(), new Psr17Factory())
 );
 ```
 
-## Modules
+## Core API Shape
 
-- `checkout()->createIntent(...)`
-- `callback()->verify(...)`
-- `transactions()->status(...)`
+Main client and modules:
+
+- `EsewaClient`
+- `$client->checkout()`
+- `$client->callbacks()` (alias: `$client->callback()`)
+- `$client->transactions()`
+
+Primary model objects:
+
+- `CheckoutRequest`
+- `CheckoutIntent`
+- `CallbackPayload`
+- `VerificationExpectation`
+- `CallbackVerification`
+- `TransactionStatusRequest`
+- `TransactionStatus`
+
+Static convenience entry point:
+
+```php
+use EsewaPayment\EsewaPayment;
+
+$client = EsewaPayment::client($config, $transport); // alias: EsewaPayment::gateway(...)
+```
+
+## Checkout Flow
+
+### 1) Build a checkout intent
+
+```php
+use EsewaPayment\Domain\Checkout\CheckoutRequest;
+
+$intent = $client->checkout()->createIntent(new CheckoutRequest(
+    amount: '100',
+    taxAmount: '0',
+    serviceCharge: '0',
+    deliveryCharge: '0',
+    transactionUuid: 'TXN-1001',
+    productCode: 'EPAYTEST',
+    successUrl: 'https://merchant.example.com/esewa/success',
+    failureUrl: 'https://merchant.example.com/esewa/failure',
+));
+```
+
+### 2) Render form fields in plain PHP
+
+```php
+$form = $intent->form();
+
+echo '<form method="POST" action="' . htmlspecialchars($form['action_url'], ENT_QUOTES) . '">';
+
+foreach ($form['fields'] as $name => $value) {
+    echo '<input type="hidden" name="' . htmlspecialchars($name, ENT_QUOTES) . '" value="' . htmlspecialchars($value, ENT_QUOTES) . '">';
+}
+
+echo '<button type="submit">Pay with eSewa</button>';
+echo '</form>';
+```
+
+### 3) Get fields directly as array
+
+```php
+$fields = $intent->fields(); // array<string,string>
+```
+
+## Callback Verification Flow
+
+Never trust redirect success alone. Always verify callback payload and signature.
+
+### 1) Build payload from callback request
+
+```php
+use EsewaPayment\Domain\Verification\CallbackPayload;
+
+$payload = CallbackPayload::fromArray([
+    'data' => $_GET['data'] ?? '',
+    'signature' => $_GET['signature'] ?? '',
+]);
+```
+
+### 2) Verify with anti-fraud expectation context
+
+```php
+use EsewaPayment\Domain\Verification\VerificationExpectation;
+
+$verification = $client->callbacks()->verifyCallback(
+    $payload,
+    new VerificationExpectation(
+        totalAmount: '100.00',
+        transactionUuid: 'TXN-1001',
+        productCode: 'EPAYTEST',
+        referenceId: null, // optional
+    )
+);
+
+if (!$verification->valid || !$verification->isSuccessful()) {
+    // reject
+}
+```
+
+### 3) Verify without context (signature only)
+
+```php
+$verification = $client->callbacks()->verify($payload);
+```
+
+## Transaction Status Flow
+
+```php
+use EsewaPayment\Domain\Transaction\TransactionStatusRequest;
+
+$status = $client->transactions()->fetchStatus(new TransactionStatusRequest(
+    transactionUuid: 'TXN-1001',
+    totalAmount: '100.00',
+    productCode: 'EPAYTEST',
+));
+
+if ($status->isSuccessful()) {
+    // COMPLETE
+}
+
+echo $status->status->value; // PENDING|COMPLETE|FULL_REFUND|PARTIAL_REFUND|AMBIGUOUS|NOT_FOUND|CANCELED|UNKNOWN
+```
+
+Alias method:
+
+```php
+$status = $client->transactions()->status($request);
+```
+
+## Configuration Patterns
+
+### Environment aliases
+
+- UAT: `uat`, `test`, `sandbox`
+- Production: `production`, `prod`, `live`
+
+### Endpoint overrides
+
+Useful if eSewa documentation/endpoints differ by account region or rollout:
+
+```php
+$config = GatewayConfig::fromArray([
+    'merchant_code' => 'EPAYTEST',
+    'secret_key' => 'secret',
+    'environment' => 'uat',
+    'checkout_form_url' => 'https://custom-esewa.example/api/epay/main/v2/form',
+    'status_check_url' => 'https://custom-esewa.example/api/epay/transaction/status/',
+]);
+```
+
+## Framework Integration Examples
+
+### Laravel service container binding
+
+```php
+use EsewaPayment\Client\EsewaClient;
+use EsewaPayment\Config\GatewayConfig;
+use EsewaPayment\Infrastructure\Transport\Psr18Transport;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Symfony\Component\HttpClient\Psr18Client;
+
+$this->app->singleton(EsewaClient::class, function () {
+    $config = GatewayConfig::fromArray([
+        'merchant_code' => config('services.esewa.merchant_code'),
+        'secret_key' => config('services.esewa.secret_key'),
+        'environment' => config('services.esewa.environment', 'uat'),
+    ]);
+
+    return new EsewaClient(
+        $config,
+        new Psr18Transport(new Psr18Client(), new Psr17Factory())
+    );
+});
+```
+
+### Symfony-style service wiring
+
+- Register `GatewayConfig` as a service parameter object
+- Inject `EsewaClient` into controllers/services
+- Use `checkout`, `callbacks`, and `transactions` modules in your application service layer
+
+## Custom Transport and Testing
+
+You can use any custom transport implementing `TransportInterface`.
+
+```php
+use EsewaPayment\Contracts\TransportInterface;
+
+final class FakeTransport implements TransportInterface
+{
+    public function get(string $url, array $query = [], array $headers = []): array
+    {
+        return ['status' => 'COMPLETE', 'ref_id' => 'REF-123'];
+    }
+}
+```
+
+Inject it:
+
+```php
+$client = new EsewaClient($config, new FakeTransport());
+```
+
+## Error Handling
+
+Key exceptions:
+
+- `InvalidPayloadException`
+- `FraudValidationException`
+- `TransportException`
+- `ApiErrorException`
+- Base: `EsewaException`
+
+Typical handling:
+
+```php
+use EsewaPayment\Exception\ApiErrorException;
+use EsewaPayment\Exception\EsewaException;
+use EsewaPayment\Exception\FraudValidationException;
+use EsewaPayment\Exception\InvalidPayloadException;
+use EsewaPayment\Exception\TransportException;
+
+try {
+    $verification = $client->callbacks()->verifyCallback($payload, $expectation);
+} catch (FraudValidationException|InvalidPayloadException $e) {
+    // fail closed
+} catch (TransportException|ApiErrorException $e) {
+    // retry/report policy
+} catch (EsewaException $e) {
+    // domain fallback policy
+}
+```
+
+## Migration Notes
+
+Current preferred naming:
+
+- `EsewaClient` (old internal name: `EsewaGateway`)
+- `GatewayConfig` (old internal name: `Config`)
+- `CallbackPayload` / `VerificationExpectation` / `CallbackVerification`
+- `TransactionStatusRequest` / `TransactionStatus`
+
+Compatibility aliases still available:
+
+- `EsewaPayment::gateway(...)` (preferred: `EsewaPayment::client(...)`)
+- `$client->callback()` (preferred: `$client->callbacks()`)
+- `$client->callbacks()->verify(...)` (preferred: `verifyCallback(...)`)
+- `$client->transactions()->status(...)` (preferred: `fetchStatus(...)`)
 
 ## Development
 

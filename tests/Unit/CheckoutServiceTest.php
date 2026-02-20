@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Tests\Unit;
 
-use EsewaPayment\Client\EsewaGateway;
-use EsewaPayment\Config\Config;
+use EsewaPayment\Client\EsewaClient;
+use EsewaPayment\Config\GatewayConfig;
 use EsewaPayment\Domain\Checkout\CheckoutRequest;
 use EsewaPayment\Tests\Fakes\FakeTransport;
 use PHPUnit\Framework\TestCase;
@@ -14,8 +14,8 @@ final class CheckoutServiceTest extends TestCase
 {
     public function testCreateIntentBuildsFormFields(): void
     {
-        $gateway = new EsewaGateway(
-            Config::fromArray([
+        $gateway = new EsewaClient(
+            GatewayConfig::fromArray([
                 'merchant_code' => 'EPAYTEST',
                 'secret_key'    => 'secret',
                 'environment'   => 'uat',

@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace EsewaPayment;
 
-use EsewaPayment\Client\EsewaGateway;
-use EsewaPayment\Config\Config;
+use EsewaPayment\Client\EsewaClient;
+use EsewaPayment\Config\GatewayConfig;
 use EsewaPayment\Contracts\TransportInterface;
 
 final class EsewaPayment
 {
-    public static function gateway(Config $config, TransportInterface $transport): EsewaGateway
+    public static function client(GatewayConfig $config, TransportInterface $transport): EsewaClient
     {
-        return new EsewaGateway($config, $transport);
+        return new EsewaClient($config, $transport);
+    }
+
+    public static function gateway(GatewayConfig $config, TransportInterface $transport): EsewaClient
+    {
+        return self::client($config, $transport);
     }
 }

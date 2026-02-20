@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Client;
 
-use EsewaPayment\Config\Config;
+use EsewaPayment\Config\GatewayConfig;
 use EsewaPayment\Config\EndpointResolver;
 use EsewaPayment\Contracts\TransportInterface;
-use EsewaPayment\Domain\Transaction\PaymentStatus;
-use EsewaPayment\Domain\Transaction\StatusQuery;
-use EsewaPayment\Domain\Transaction\StatusResult;
+use EsewaPayment\Domain\Transaction\TransactionStatusPayload;
+use EsewaPayment\Domain\Transaction\TransactionStatusRequest;
+use EsewaPayment\Domain\Transaction\TransactionStatus;
 
 final class TransactionService
 {
     public function __construct(
-        private readonly Config $config,
+        private readonly GatewayConfig $config,
         private readonly EndpointResolver $endpoints,
         private readonly TransportInterface $transport,
     ) {
     }
 
-    public function status(StatusQuery $query): StatusResult
+    public function fetchStatus(TransactionStatusRequest $query): TransactionStatus
     {
         $payload = $this->transport->get(
             $this->endpoints->statusCheckUrl($this->config),
@@ -31,9 +31,11 @@ final class TransactionService
             ]
         );
 
-        $status = PaymentStatus::fromValue(isset($payload['status']) ? (string) $payload['status'] : null);
-        $referenceId = isset($payload['ref_id']) ? (string) $payload['ref_id'] : null;
+        return TransactionStatusPayload::fromArray($payload)->toResult();
+    }
 
-        return new StatusResult($status, $referenceId, $payload);
+    public function status(TransactionStatusRequest $query): TransactionStatus
+    {
+        return $this->fetchStatus($query);
     }
 }

@@ -6,7 +6,7 @@ namespace EsewaPayment\Config;
 
 final class EndpointResolver
 {
-    public function checkoutFormUrl(Config $config): string
+    public function checkoutFormUrl(GatewayConfig $config): string
     {
         if ($config->checkoutFormUrl !== null && $config->checkoutFormUrl !== '') {
             return $config->checkoutFormUrl;
@@ -18,7 +18,7 @@ final class EndpointResolver
         };
     }
 
-    public function statusCheckUrl(Config $config): string
+    public function statusCheckUrl(GatewayConfig $config): string
     {
         if ($config->statusCheckUrl !== null && $config->statusCheckUrl !== '') {
             return $config->statusCheckUrl;

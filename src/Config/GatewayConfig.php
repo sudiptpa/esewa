@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Config;
 
-final class Config
+final class GatewayConfig
 {
     public function __construct(
         public readonly string $merchantCode,

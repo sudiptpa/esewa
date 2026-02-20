@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Domain\Transaction;
 
-final class StatusQuery
+final class TransactionStatusRequest
 {
     public function __construct(
         public readonly string $transactionUuid,
