@@ -55,23 +55,42 @@ declare(strict_types=1);
 
 use EsewaPayment\Client\EsewaClient;
 use EsewaPayment\Config\ClientOptions;
-use EsewaPayment\Config\GatewayConfig;
+use EsewaPayment\EsewaPayment;
 use EsewaPayment\Infrastructure\Idempotency\InMemoryIdempotencyStore;
 use EsewaPayment\Infrastructure\Transport\Psr18Transport;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpClient\Psr18Client;
 
-$config = GatewayConfig::make(
+$client = EsewaPayment::make(
     merchantCode: 'EPAYTEST',
     secretKey: $_ENV['ESEWA_SECRET_KEY'],
+    transport: new Psr18Transport(new Psr18Client(), new Psr17Factory()),
     environment: 'uat', // uat|test|sandbox|production|prod|live
 );
+```
 
-$client = new EsewaClient(
-    $config,
-    new Psr18Transport(new Psr18Client(), new Psr17Factory()),
-    new ClientOptions(
+Add hardening options only when needed:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use EsewaPayment\Config\ClientOptions;
+use EsewaPayment\EsewaPayment;
+use EsewaPayment\Infrastructure\Idempotency\InMemoryIdempotencyStore;
+use EsewaPayment\Infrastructure\Transport\Psr18Transport;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Psr\Log\NullLogger;
+use Symfony\Component\HttpClient\Psr18Client;
+
+$client = EsewaPayment::make(
+    merchantCode: 'EPAYTEST',
+    secretKey: $_ENV['ESEWA_SECRET_KEY'],
+    transport: new Psr18Transport(new Psr18Client(), new Psr17Factory()),
+    environment: 'uat',
+    options: new ClientOptions(
         maxStatusRetries: 2,
         statusRetryDelayMs: 150,
         preventCallbackReplay: true,
@@ -105,7 +124,11 @@ Static convenience entry point:
 ```php
 use EsewaPayment\EsewaPayment;
 
-$client = EsewaPayment::client($config, $transport);
+$client = EsewaPayment::make(
+    merchantCode: 'EPAYTEST',
+    secretKey: 'secret',
+    transport: $transport,
+);
 ```
 
 ## Checkout Flow
