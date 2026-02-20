@@ -9,7 +9,8 @@ final class SignatureService
     public function __construct(
         #[\SensitiveParameter]
         private readonly string $secretKey,
-    ) {}
+    ) {
+    }
 
     public function generate(
         string $totalAmount,
@@ -20,9 +21,9 @@ final class SignatureService
         $fields = array_map('trim', explode(',', $signedFieldNames));
 
         $values = [
-            'total_amount' => $totalAmount,
+            'total_amount'     => $totalAmount,
             'transaction_uuid' => $transactionUuid,
-            'product_code' => $productCode,
+            'product_code'     => $productCode,
         ];
 
         $parts = [];
@@ -31,7 +32,7 @@ final class SignatureService
                 continue;
             }
 
-            $parts[] = $field . '=' . $values[$field];
+            $parts[] = $field.'='.$values[$field];
         }
 
         $message = implode(',', $parts);

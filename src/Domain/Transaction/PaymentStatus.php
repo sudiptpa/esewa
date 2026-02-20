@@ -17,6 +17,6 @@ enum PaymentStatus: string
 
     public static function fromValue(?string $value): self
     {
-        return self::tryFrom((string)$value) ?? self::UNKNOWN;
+        return self::tryFrom((string) $value) ?? self::UNKNOWN;
     }
 }

@@ -17,7 +17,8 @@ final class VerificationResult
         public readonly ?string $referenceId,
         public readonly string $message,
         public readonly array $raw,
-    ) {}
+    ) {
+    }
 
     public function isSuccessful(): bool
     {

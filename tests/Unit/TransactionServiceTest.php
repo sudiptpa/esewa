@@ -23,8 +23,8 @@ final class TransactionServiceTest extends TestCase
         $gateway = new EsewaGateway(
             Config::fromArray([
                 'merchant_code' => 'EPAYTEST',
-                'secret_key' => 'secret',
-                'environment' => 'uat',
+                'secret_key'    => 'secret',
+                'environment'   => 'uat',
             ]),
             $fake
         );

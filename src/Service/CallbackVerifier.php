@@ -12,18 +12,20 @@ use EsewaPayment\Exception\FraudValidationException;
 
 final class CallbackVerifier
 {
-    public function __construct(private readonly SignatureService $signatures) {}
+    public function __construct(private readonly SignatureService $signatures)
+    {
+    }
 
     public function verify(ReturnPayload $payload, ?VerificationContext $context = null): VerificationResult
     {
         $data = $payload->decodedData();
 
-        $totalAmount = (string)($data['total_amount'] ?? '');
-        $transactionUuid = (string)($data['transaction_uuid'] ?? '');
-        $productCode = (string)($data['product_code'] ?? '');
-        $signedFieldNames = (string)($data['signed_field_names'] ?? 'total_amount,transaction_uuid,product_code');
-        $status = PaymentStatus::fromValue((string)($data['status'] ?? null));
-        $referenceId = isset($data['transaction_code']) ? (string)$data['transaction_code'] : null;
+        $totalAmount = (string) ($data['total_amount'] ?? '');
+        $transactionUuid = (string) ($data['transaction_uuid'] ?? '');
+        $productCode = (string) ($data['product_code'] ?? '');
+        $signedFieldNames = (string) ($data['signed_field_names'] ?? 'total_amount,transaction_uuid,product_code');
+        $status = PaymentStatus::fromValue((string) ($data['status'] ?? null));
+        $referenceId = isset($data['transaction_code']) ? (string) $data['transaction_code'] : null;
 
         $validSignature = $this->signatures->verify(
             $payload->signature,

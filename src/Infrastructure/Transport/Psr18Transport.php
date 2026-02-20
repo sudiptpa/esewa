@@ -15,16 +15,18 @@ final class Psr18Transport implements TransportInterface
     public function __construct(
         private readonly ClientInterface $http,
         private readonly RequestFactoryInterface $requests,
-    ) {}
+    ) {
+    }
 
     /**
      * @param array<string,string> $query
      * @param array<string,string> $headers
+     *
      * @return array<string,mixed>
      */
     public function get(string $url, array $query = [], array $headers = []): array
     {
-        $fullUrl = $url . (str_contains($url, '?') ? '&' : '?') . http_build_query($query);
+        $fullUrl = $url.(str_contains($url, '?') ? '&' : '?').http_build_query($query);
         $request = $this->requests->createRequest('GET', $fullUrl);
 
         foreach ($headers as $name => $value) {
@@ -34,14 +36,14 @@ final class Psr18Transport implements TransportInterface
         try {
             $response = $this->http->sendRequest($request);
         } catch (\Throwable $e) {
-            throw new TransportException('HTTP request failed: ' . $e->getMessage(), 0, $e);
+            throw new TransportException('HTTP request failed: '.$e->getMessage(), 0, $e);
         }
 
         if ($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
-            throw new TransportException('Unexpected HTTP status: ' . $response->getStatusCode());
+            throw new TransportException('Unexpected HTTP status: '.$response->getStatusCode());
         }
 
-        $decoded = json_decode((string)$response->getBody(), true);
+        $decoded = json_decode((string) $response->getBody(), true);
         if (!is_array($decoded)) {
             throw new ApiErrorException('Invalid JSON response from eSewa status API.');
         }

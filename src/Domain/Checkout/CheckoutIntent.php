@@ -12,7 +12,8 @@ final class CheckoutIntent
     public function __construct(
         public readonly string $actionUrl,
         public readonly array $fields,
-    ) {}
+    ) {
+    }
 
     /**
      * @return array{action_url:string,fields:array<string,string>}
@@ -21,7 +22,7 @@ final class CheckoutIntent
     {
         return [
             'action_url' => $this->actionUrl,
-            'fields' => $this->fields,
+            'fields'     => $this->fields,
         ];
     }
 }

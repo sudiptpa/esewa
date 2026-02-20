@@ -4,4 +4,6 @@ declare(strict_types=1);
 
 namespace EsewaPayment\Exception;
 
-final class FraudValidationException extends EsewaException {}
+final class FraudValidationException extends EsewaException
+{
+}

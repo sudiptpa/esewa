@@ -25,6 +25,7 @@ final class FakeTransport implements TransportInterface
     /**
      * @param array<string,string> $query
      * @param array<string,string> $headers
+     *
      * @return array<string,mixed>
      */
     public function get(string $url, array $query = [], array $headers = []): array

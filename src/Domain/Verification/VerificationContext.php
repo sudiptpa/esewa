@@ -11,5 +11,6 @@ final class VerificationContext
         public readonly string $transactionUuid,
         public readonly string $productCode,
         public readonly ?string $referenceId = null,
-    ) {}
+    ) {
+    }
 }

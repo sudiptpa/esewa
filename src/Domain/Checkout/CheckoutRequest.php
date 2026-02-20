@@ -19,9 +19,9 @@ final class CheckoutRequest
     ) {
         foreach ([
             'transactionUuid' => $transactionUuid,
-            'productCode' => $productCode,
-            'successUrl' => $successUrl,
-            'failureUrl' => $failureUrl,
+            'productCode'     => $productCode,
+            'successUrl'      => $successUrl,
+            'failureUrl'      => $failureUrl,
         ] as $field => $value) {
             if ($value === '') {
                 throw new \InvalidArgumentException("{$field} is required.");
@@ -31,10 +31,10 @@ final class CheckoutRequest
 
     public function totalAmount(): string
     {
-        $total = (float)$this->amount
-            + (float)$this->taxAmount
-            + (float)$this->serviceCharge
-            + (float)$this->deliveryCharge;
+        $total = (float) $this->amount
+            + (float) $this->taxAmount
+            + (float) $this->serviceCharge
+            + (float) $this->deliveryCharge;
 
         return number_format($total, 2, '.', '');
     }

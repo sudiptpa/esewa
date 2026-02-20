@@ -13,7 +13,7 @@ final class EndpointResolver
         }
 
         return match ($config->environment) {
-            Environment::UAT => 'https://rc-epay.esewa.com.np/api/epay/main/v2/form',
+            Environment::UAT        => 'https://rc-epay.esewa.com.np/api/epay/main/v2/form',
             Environment::PRODUCTION => 'https://epay.esewa.com.np/api/epay/main/v2/form',
         };
     }
@@ -25,7 +25,7 @@ final class EndpointResolver
         }
 
         return match ($config->environment) {
-            Environment::UAT => 'https://rc-epay.esewa.com.np/api/epay/transaction/status/',
+            Environment::UAT        => 'https://rc-epay.esewa.com.np/api/epay/transaction/status/',
             Environment::PRODUCTION => 'https://epay.esewa.com.np/api/epay/transaction/status/',
         };
     }

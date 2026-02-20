@@ -16,7 +16,8 @@ final class CheckoutService
         private readonly Config $config,
         private readonly EndpointResolver $endpoints,
         private readonly SignatureService $signatures,
-    ) {}
+    ) {
+    }
 
     public function createIntent(CheckoutRequest $request): CheckoutIntent
     {
@@ -29,17 +30,17 @@ final class CheckoutService
         );
 
         $fields = [
-            'amount' => number_format((float)$request->amount, 2, '.', ''),
-            'tax_amount' => number_format((float)$request->taxAmount, 2, '.', ''),
-            'product_service_charge' => number_format((float)$request->serviceCharge, 2, '.', ''),
-            'product_delivery_charge' => number_format((float)$request->deliveryCharge, 2, '.', ''),
-            'total_amount' => $totalAmount,
-            'transaction_uuid' => $request->transactionUuid,
-            'product_code' => $request->productCode,
-            'success_url' => $request->successUrl,
-            'failure_url' => $request->failureUrl,
-            'signed_field_names' => $request->signedFieldNames,
-            'signature' => $signature,
+            'amount'                  => number_format((float) $request->amount, 2, '.', ''),
+            'tax_amount'              => number_format((float) $request->taxAmount, 2, '.', ''),
+            'product_service_charge'  => number_format((float) $request->serviceCharge, 2, '.', ''),
+            'product_delivery_charge' => number_format((float) $request->deliveryCharge, 2, '.', ''),
+            'total_amount'            => $totalAmount,
+            'transaction_uuid'        => $request->transactionUuid,
+            'product_code'            => $request->productCode,
+            'success_url'             => $request->successUrl,
+            'failure_url'             => $request->failureUrl,
+            'signed_field_names'      => $request->signedFieldNames,
+            'signature'               => $signature,
         ];
 
         return new CheckoutIntent($this->endpoints->checkoutFormUrl($this->config), $fields);

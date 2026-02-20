@@ -27,9 +27,9 @@ final class Config
     public static function fromArray(array $config): self
     {
         return new self(
-            merchantCode: (string)($config['merchant_code'] ?? ''),
-            secretKey: (string)($config['secret_key'] ?? ''),
-            environment: Environment::fromString((string)($config['environment'] ?? 'uat')),
+            merchantCode: (string) ($config['merchant_code'] ?? ''),
+            secretKey: (string) ($config['secret_key'] ?? ''),
+            environment: Environment::fromString((string) ($config['environment'] ?? 'uat')),
             checkoutFormUrl: $config['checkout_form_url'] ?? null,
             statusCheckUrl: $config['status_check_url'] ?? null,
         );

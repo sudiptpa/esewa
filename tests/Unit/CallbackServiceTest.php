@@ -19,19 +19,19 @@ final class CallbackServiceTest extends TestCase
     {
         $config = Config::fromArray([
             'merchant_code' => 'EPAYTEST',
-            'secret_key' => 'secret',
-            'environment' => 'uat',
+            'secret_key'    => 'secret',
+            'environment'   => 'uat',
         ]);
 
         $gateway = new EsewaGateway($config, new FakeTransport([]));
 
         $data = [
-            'status' => 'COMPLETE',
-            'transaction_uuid' => 'TXN-1001',
-            'total_amount' => '100.00',
-            'product_code' => 'EPAYTEST',
+            'status'             => 'COMPLETE',
+            'transaction_uuid'   => 'TXN-1001',
+            'total_amount'       => '100.00',
+            'product_code'       => 'EPAYTEST',
             'signed_field_names' => 'total_amount,transaction_uuid,product_code',
-            'transaction_code' => 'R-1001',
+            'transaction_code'   => 'R-1001',
         ];
 
         $signature = (new SignatureService('secret'))->generate(
@@ -41,7 +41,7 @@ final class CallbackServiceTest extends TestCase
             'total_amount,transaction_uuid,product_code'
         );
 
-        $payload = new ReturnPayload(base64_encode((string)json_encode($data)), $signature);
+        $payload = new ReturnPayload(base64_encode((string) json_encode($data)), $signature);
 
         $result = $gateway->callback()->verify($payload, new VerificationContext(
             totalAmount: '100.00',
@@ -58,22 +58,22 @@ final class CallbackServiceTest extends TestCase
     {
         $config = Config::fromArray([
             'merchant_code' => 'EPAYTEST',
-            'secret_key' => 'secret',
-            'environment' => 'uat',
+            'secret_key'    => 'secret',
+            'environment'   => 'uat',
         ]);
 
         $gateway = new EsewaGateway($config, new FakeTransport([]));
 
         $data = [
-            'status' => 'COMPLETE',
-            'transaction_uuid' => 'TXN-1001',
-            'total_amount' => '100.00',
-            'product_code' => 'EPAYTEST',
+            'status'             => 'COMPLETE',
+            'transaction_uuid'   => 'TXN-1001',
+            'total_amount'       => '100.00',
+            'product_code'       => 'EPAYTEST',
             'signed_field_names' => 'total_amount,transaction_uuid,product_code',
         ];
 
         $signature = (new SignatureService('secret'))->generate('100.00', 'TXN-1001', 'EPAYTEST');
-        $payload = new ReturnPayload(base64_encode((string)json_encode($data)), $signature);
+        $payload = new ReturnPayload(base64_encode((string) json_encode($data)), $signature);
 
         $this->expectException(FraudValidationException::class);
 

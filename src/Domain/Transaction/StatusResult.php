@@ -13,7 +13,8 @@ final class StatusResult
         public readonly PaymentStatus $status,
         public readonly ?string $referenceId,
         public readonly array $raw,
-    ) {}
+    ) {
+    }
 
     public function isSuccessful(): bool
     {

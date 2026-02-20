@@ -11,7 +11,9 @@ use EsewaPayment\Service\CallbackVerifier;
 
 final class CallbackService
 {
-    public function __construct(private readonly CallbackVerifier $verifier) {}
+    public function __construct(private readonly CallbackVerifier $verifier)
+    {
+    }
 
     public function verify(ReturnPayload $payload, ?VerificationContext $context = null): VerificationResult
     {

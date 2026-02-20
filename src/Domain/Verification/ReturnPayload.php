@@ -21,8 +21,8 @@ final class ReturnPayload
     public static function fromArray(array $payload): self
     {
         return new self(
-            data: (string)($payload['data'] ?? ''),
-            signature: (string)($payload['signature'] ?? ''),
+            data: (string) ($payload['data'] ?? ''),
+            signature: (string) ($payload['signature'] ?? ''),
         );
     }
 
