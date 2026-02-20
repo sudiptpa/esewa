@@ -72,7 +72,7 @@ final class CallbackServiceTest extends TestCase
             'product_code'     => 'EPAYTEST',
         ];
 
-        $payload = new CallbackPayload(base64_encode((string)json_encode($data)), 'wrong-signature');
+        $payload = new CallbackPayload(base64_encode((string) json_encode($data)), 'wrong-signature');
         $result = $gateway->callbacks()->verifyCallback($payload);
 
         $this->assertFalse($result->valid);
