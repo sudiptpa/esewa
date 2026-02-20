@@ -18,11 +18,11 @@ final class CallbackServiceTest extends TestCase
 {
     public function testVerifyValidCallbackPayload(): void
     {
-        $config = GatewayConfig::fromArray([
-            'merchant_code' => 'EPAYTEST',
-            'secret_key'    => 'secret',
-            'environment'   => 'uat',
-        ]);
+        $config = GatewayConfig::make(
+            merchantCode: 'EPAYTEST',
+            secretKey: 'secret',
+            environment: 'uat',
+        );
 
         $gateway = new EsewaClient($config, new FakeTransport([]));
 
@@ -44,7 +44,7 @@ final class CallbackServiceTest extends TestCase
 
         $payload = new CallbackPayload(base64_encode((string) json_encode($data)), $signature);
 
-        $result = $gateway->callback()->verify($payload, new VerificationExpectation(
+        $result = $gateway->callbacks()->verifyCallback($payload, new VerificationExpectation(
             totalAmount: '100.00',
             transactionUuid: 'TXN-1001',
             productCode: 'EPAYTEST',
@@ -57,11 +57,11 @@ final class CallbackServiceTest extends TestCase
 
     public function testVerifyReturnsInvalidResultWhenSignatureIsWrong(): void
     {
-        $config = GatewayConfig::fromArray([
-            'merchant_code' => 'EPAYTEST',
-            'secret_key'    => 'secret',
-            'environment'   => 'uat',
-        ]);
+        $config = GatewayConfig::make(
+            merchantCode: 'EPAYTEST',
+            secretKey: 'secret',
+            environment: 'uat',
+        );
 
         $gateway = new EsewaClient($config, new FakeTransport([]));
 
@@ -72,8 +72,8 @@ final class CallbackServiceTest extends TestCase
             'product_code'     => 'EPAYTEST',
         ];
 
-        $payload = new CallbackPayload(base64_encode((string) json_encode($data)), 'wrong-signature');
-        $result = $gateway->callback()->verify($payload);
+        $payload = new CallbackPayload(base64_encode((string)json_encode($data)), 'wrong-signature');
+        $result = $gateway->callbacks()->verifyCallback($payload);
 
         $this->assertFalse($result->valid);
         $this->assertSame(PaymentStatus::COMPLETE, $result->status);
@@ -83,11 +83,11 @@ final class CallbackServiceTest extends TestCase
 
     public function testVerifyThrowsOnFraudMismatch(): void
     {
-        $config = GatewayConfig::fromArray([
-            'merchant_code' => 'EPAYTEST',
-            'secret_key'    => 'secret',
-            'environment'   => 'uat',
-        ]);
+        $config = GatewayConfig::make(
+            merchantCode: 'EPAYTEST',
+            secretKey: 'secret',
+            environment: 'uat',
+        );
 
         $gateway = new EsewaClient($config, new FakeTransport([]));
 
@@ -104,7 +104,7 @@ final class CallbackServiceTest extends TestCase
 
         $this->expectException(FraudValidationException::class);
 
-        $gateway->callback()->verify($payload, new VerificationExpectation(
+        $gateway->callbacks()->verifyCallback($payload, new VerificationExpectation(
             totalAmount: '99.00',
             transactionUuid: 'TXN-1001',
             productCode: 'EPAYTEST'

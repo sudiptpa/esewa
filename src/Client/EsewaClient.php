@@ -33,14 +33,9 @@ final class EsewaClient
         return $this->checkout;
     }
 
-    public function callback(): CallbackService
-    {
-        return $this->callback;
-    }
-
     public function callbacks(): CallbackService
     {
-        return $this->callback();
+        return $this->callback;
     }
 
     public function transactions(): TransactionService

@@ -33,9 +33,4 @@ final class TransactionService
 
         return TransactionStatusPayload::fromArray($payload)->toResult();
     }
-
-    public function status(TransactionStatusRequest $query): TransactionStatus
-    {
-        return $this->fetchStatus($query);
-    }
 }

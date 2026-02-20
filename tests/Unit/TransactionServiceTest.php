@@ -22,15 +22,15 @@ final class TransactionServiceTest extends TestCase
         ]);
 
         $gateway = new EsewaClient(
-            GatewayConfig::fromArray([
-                'merchant_code' => 'EPAYTEST',
-                'secret_key'    => 'secret',
-                'environment'   => 'uat',
-            ]),
+            GatewayConfig::make(
+                merchantCode: 'EPAYTEST',
+                secretKey: 'secret',
+                environment: 'uat',
+            ),
             $fake
         );
 
-        $result = $gateway->transactions()->status(new TransactionStatusRequest(
+        $result = $gateway->transactions()->fetchStatus(new TransactionStatusRequest(
             transactionUuid: 'TXN-1001',
             totalAmount: '100.00',
             productCode: 'EPAYTEST',
@@ -45,18 +45,18 @@ final class TransactionServiceTest extends TestCase
     public function testStatusMapsKnownStatuses(string $apiStatus, PaymentStatus $expectedStatus): void
     {
         $gateway = new EsewaClient(
-            GatewayConfig::fromArray([
-                'merchant_code' => 'EPAYTEST',
-                'secret_key'    => 'secret',
-                'environment'   => 'uat',
-            ]),
+            GatewayConfig::make(
+                merchantCode: 'EPAYTEST',
+                secretKey: 'secret',
+                environment: 'uat',
+            ),
             new FakeTransport([
                 'status' => $apiStatus,
                 'ref_id' => 'REF-XYZ',
             ])
         );
 
-        $result = $gateway->transactions()->status(new TransactionStatusRequest(
+        $result = $gateway->transactions()->fetchStatus(new TransactionStatusRequest(
             transactionUuid: 'TXN-1001',
             totalAmount: '100.00',
             productCode: 'EPAYTEST',

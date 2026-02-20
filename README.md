@@ -31,7 +31,6 @@ Framework-agnostic eSewa ePay v2 SDK for modern PHP applications.
 - [Framework Integration Examples](#framework-integration-examples)
 - [Custom Transport and Testing](#custom-transport-and-testing)
 - [Error Handling](#error-handling)
-- [Migration Notes](#migration-notes)
 - [Development](#development)
 
 ## Installation
@@ -59,11 +58,11 @@ use EsewaPayment\Infrastructure\Transport\Psr18Transport;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Symfony\Component\HttpClient\Psr18Client;
 
-$config = GatewayConfig::fromArray([
-    'merchant_code' => 'EPAYTEST',
-    'secret_key' => $_ENV['ESEWA_SECRET_KEY'],
-    'environment' => 'uat', // uat|test|sandbox|production|prod|live
-]);
+$config = GatewayConfig::make(
+    merchantCode: 'EPAYTEST',
+    secretKey: $_ENV['ESEWA_SECRET_KEY'],
+    environment: 'uat', // uat|test|sandbox|production|prod|live
+);
 
 $client = new EsewaClient(
     $config,
@@ -77,7 +76,7 @@ Main client and modules:
 
 - `EsewaClient`
 - `$client->checkout()`
-- `$client->callbacks()` (alias: `$client->callback()`)
+- `$client->callbacks()`
 - `$client->transactions()`
 
 Primary model objects:
@@ -95,7 +94,7 @@ Static convenience entry point:
 ```php
 use EsewaPayment\EsewaPayment;
 
-$client = EsewaPayment::client($config, $transport); // alias: EsewaPayment::gateway(...)
+$client = EsewaPayment::client($config, $transport);
 ```
 
 ## Checkout Flow
@@ -176,7 +175,7 @@ if (!$verification->valid || !$verification->isSuccessful()) {
 ### 3) Verify without context (signature only)
 
 ```php
-$verification = $client->callbacks()->verify($payload);
+$verification = $client->callbacks()->verifyCallback($payload);
 ```
 
 ## Transaction Status Flow
@@ -197,12 +196,6 @@ if ($status->isSuccessful()) {
 echo $status->status->value; // PENDING|COMPLETE|FULL_REFUND|PARTIAL_REFUND|AMBIGUOUS|NOT_FOUND|CANCELED|UNKNOWN
 ```
 
-Alias method:
-
-```php
-$status = $client->transactions()->status($request);
-```
-
 ## Configuration Patterns
 
 ### Environment aliases
@@ -215,13 +208,13 @@ $status = $client->transactions()->status($request);
 Useful if eSewa documentation/endpoints differ by account region or rollout:
 
 ```php
-$config = GatewayConfig::fromArray([
-    'merchant_code' => 'EPAYTEST',
-    'secret_key' => 'secret',
-    'environment' => 'uat',
-    'checkout_form_url' => 'https://custom-esewa.example/api/epay/main/v2/form',
-    'status_check_url' => 'https://custom-esewa.example/api/epay/transaction/status/',
-]);
+$config = GatewayConfig::make(
+    merchantCode: 'EPAYTEST',
+    secretKey: 'secret',
+    environment: 'uat',
+    checkoutFormUrl: 'https://custom-esewa.example/api/epay/main/v2/form',
+    statusCheckUrl: 'https://custom-esewa.example/api/epay/transaction/status/',
+);
 ```
 
 ## Framework Integration Examples
@@ -236,11 +229,11 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Symfony\Component\HttpClient\Psr18Client;
 
 $this->app->singleton(EsewaClient::class, function () {
-    $config = GatewayConfig::fromArray([
-        'merchant_code' => config('services.esewa.merchant_code'),
-        'secret_key' => config('services.esewa.secret_key'),
-        'environment' => config('services.esewa.environment', 'uat'),
-    ]);
+    $config = GatewayConfig::make(
+        merchantCode: config('services.esewa.merchant_code'),
+        secretKey: config('services.esewa.secret_key'),
+        environment: config('services.esewa.environment', 'uat'),
+    );
 
     return new EsewaClient(
         $config,
@@ -306,22 +299,6 @@ try {
     // domain fallback policy
 }
 ```
-
-## Migration Notes
-
-Current preferred naming:
-
-- `EsewaClient` (old internal name: `EsewaGateway`)
-- `GatewayConfig` (old internal name: `Config`)
-- `CallbackPayload` / `VerificationExpectation` / `CallbackVerification`
-- `TransactionStatusRequest` / `TransactionStatus`
-
-Compatibility aliases still available:
-
-- `EsewaPayment::gateway(...)` (preferred: `EsewaPayment::client(...)`)
-- `$client->callback()` (preferred: `$client->callbacks()`)
-- `$client->callbacks()->verify(...)` (preferred: `verifyCallback(...)`)
-- `$client->transactions()->status(...)` (preferred: `fetchStatus(...)`)
 
 ## Development
 

@@ -15,11 +15,11 @@ final class CheckoutServiceTest extends TestCase
     public function testCreateIntentBuildsFormFields(): void
     {
         $gateway = new EsewaClient(
-            GatewayConfig::fromArray([
-                'merchant_code' => 'EPAYTEST',
-                'secret_key'    => 'secret',
-                'environment'   => 'uat',
-            ]),
+            GatewayConfig::make(
+                merchantCode: 'EPAYTEST',
+                secretKey: 'secret',
+                environment: 'uat',
+            ),
             new FakeTransport([])
         );
 

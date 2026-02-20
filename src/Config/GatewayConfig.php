@@ -23,13 +23,30 @@ final class GatewayConfig
         }
     }
 
+    public static function make(
+        string $merchantCode,
+        #[\SensitiveParameter]
+        string $secretKey,
+        Environment|string $environment = Environment::UAT,
+        ?string $checkoutFormUrl = null,
+        ?string $statusCheckUrl = null,
+    ): self {
+        return new self(
+            merchantCode: $merchantCode,
+            secretKey: $secretKey,
+            environment: is_string($environment) ? Environment::fromString($environment) : $environment,
+            checkoutFormUrl: $checkoutFormUrl,
+            statusCheckUrl: $statusCheckUrl,
+        );
+    }
+
     /** @param array<string, string> $config */
     public static function fromArray(array $config): self
     {
-        return new self(
+        return self::make(
             merchantCode: (string) ($config['merchant_code'] ?? ''),
             secretKey: (string) ($config['secret_key'] ?? ''),
-            environment: Environment::fromString((string) ($config['environment'] ?? 'uat')),
+            environment: (string) ($config['environment'] ?? 'uat'),
             checkoutFormUrl: $config['checkout_form_url'] ?? null,
             statusCheckUrl: $config['status_check_url'] ?? null,
         );

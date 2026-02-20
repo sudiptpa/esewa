@@ -17,11 +17,6 @@ final class CallbackService
 
     public function verifyCallback(CallbackPayload $payload, ?VerificationExpectation $context = null): CallbackVerification
     {
-        return $this->verify($payload, $context);
-    }
-
-    public function verify(CallbackPayload $payload, ?VerificationExpectation $context = null): CallbackVerification
-    {
         return $this->verifier->verify($payload, $context);
     }
 }

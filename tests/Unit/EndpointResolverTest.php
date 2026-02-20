@@ -12,11 +12,11 @@ final class EndpointResolverTest extends TestCase
 {
     public function testUsesDefaultUatEndpoints(): void
     {
-        $config = GatewayConfig::fromArray([
-            'merchant_code' => 'EPAYTEST',
-            'secret_key'    => 'secret',
-            'environment'   => 'uat',
-        ]);
+        $config = GatewayConfig::make(
+            merchantCode: 'EPAYTEST',
+            secretKey: 'secret',
+            environment: 'uat',
+        );
 
         $resolver = new EndpointResolver();
 
@@ -32,11 +32,11 @@ final class EndpointResolverTest extends TestCase
 
     public function testUsesDefaultProductionEndpoints(): void
     {
-        $config = GatewayConfig::fromArray([
-            'merchant_code' => 'EPAYTEST',
-            'secret_key'    => 'secret',
-            'environment'   => 'production',
-        ]);
+        $config = GatewayConfig::make(
+            merchantCode: 'EPAYTEST',
+            secretKey: 'secret',
+            environment: 'production',
+        );
 
         $resolver = new EndpointResolver();
 
@@ -52,13 +52,13 @@ final class EndpointResolverTest extends TestCase
 
     public function testUsesOverridesWhenProvided(): void
     {
-        $config = GatewayConfig::fromArray([
-            'merchant_code'     => 'EPAYTEST',
-            'secret_key'        => 'secret',
-            'environment'       => 'uat',
-            'checkout_form_url' => 'https://custom.test/form',
-            'status_check_url'  => 'https://custom.test/status',
-        ]);
+        $config = GatewayConfig::make(
+            merchantCode: 'EPAYTEST',
+            secretKey: 'secret',
+            environment: 'uat',
+            checkoutFormUrl: 'https://custom.test/form',
+            statusCheckUrl: 'https://custom.test/status',
+        );
 
         $resolver = new EndpointResolver();
 

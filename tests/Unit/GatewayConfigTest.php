@@ -10,15 +10,15 @@ use PHPUnit\Framework\TestCase;
 
 final class GatewayConfigTest extends TestCase
 {
-    public function testFromArrayMapsValuesAndAliases(): void
+    public function testMakeMapsValuesAndAliases(): void
     {
-        $config = GatewayConfig::fromArray([
-            'merchant_code'     => 'EPAYTEST',
-            'secret_key'        => 'secret',
-            'environment'       => 'live',
-            'checkout_form_url' => 'https://checkout.test/form',
-            'status_check_url'  => 'https://checkout.test/status',
-        ]);
+        $config = GatewayConfig::make(
+            merchantCode: 'EPAYTEST',
+            secretKey: 'secret',
+            environment: 'live',
+            checkoutFormUrl: 'https://checkout.test/form',
+            statusCheckUrl: 'https://checkout.test/status',
+        );
 
         $this->assertSame('EPAYTEST', $config->merchantCode);
         $this->assertSame('secret', $config->secretKey);
@@ -48,10 +48,10 @@ final class GatewayConfigTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unsupported environment: qa');
 
-        GatewayConfig::fromArray([
-            'merchant_code' => 'EPAYTEST',
-            'secret_key'    => 'secret',
-            'environment'   => 'qa',
-        ]);
+        GatewayConfig::make(
+            merchantCode: 'EPAYTEST',
+            secretKey: 'secret',
+            environment: 'qa',
+        );
     }
 }

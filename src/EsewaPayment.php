@@ -14,9 +14,4 @@ final class EsewaPayment
     {
         return new EsewaClient($config, $transport);
     }
-
-    public static function gateway(GatewayConfig $config, TransportInterface $transport): EsewaClient
-    {
-        return self::client($config, $transport);
-    }
 }
