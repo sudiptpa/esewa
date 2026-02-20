@@ -4,6 +4,7 @@ Framework-agnostic eSewa ePay v2 SDK for modern PHP applications.
 
 [![CI](https://github.com/sudiptpa/esewa/actions/workflows/ci.yml/badge.svg)](https://github.com/sudiptpa/esewa/actions/workflows/ci.yml)
 [![Latest Release](https://img.shields.io/github/v/release/sudiptpa/esewa?sort=semver)](https://github.com/sudiptpa/esewa/releases)
+[![GitHub Downloads](https://img.shields.io/github/downloads/sudiptpa/esewa/total)](https://github.com/sudiptpa/esewa/releases)
 [![PHP Version](https://img.shields.io/badge/php-8.1--8.5-777bb4.svg)](https://www.php.net/)
 [![Packagist](https://img.shields.io/badge/packagist-sudiptpa%2Fesewa--payment-f28d1a.svg)](https://packagist.org/packages/sudiptpa/esewa-payment)
 [![License](https://img.shields.io/github/license/sudiptpa/esewa)](LICENSE)
