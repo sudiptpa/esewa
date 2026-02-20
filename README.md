@@ -28,6 +28,7 @@ Framework-agnostic eSewa ePay v2 SDK for modern PHP applications.
 - [Callback Verification Flow](#callback-verification-flow)
 - [Transaction Status Flow](#transaction-status-flow)
 - [Configuration Patterns](#configuration-patterns)
+- [Production Hardening](#production-hardening)
 - [Framework Integration Examples](#framework-integration-examples)
 - [Custom Transport and Testing](#custom-transport-and-testing)
 - [Error Handling](#error-handling)
@@ -53,9 +54,12 @@ composer require symfony/http-client nyholm/psr7
 declare(strict_types=1);
 
 use EsewaPayment\Client\EsewaClient;
+use EsewaPayment\Config\ClientOptions;
 use EsewaPayment\Config\GatewayConfig;
+use EsewaPayment\Infrastructure\Idempotency\InMemoryIdempotencyStore;
 use EsewaPayment\Infrastructure\Transport\Psr18Transport;
 use Nyholm\Psr7\Factory\Psr17Factory;
+use Psr\Log\NullLogger;
 use Symfony\Component\HttpClient\Psr18Client;
 
 $config = GatewayConfig::make(
@@ -66,7 +70,14 @@ $config = GatewayConfig::make(
 
 $client = new EsewaClient(
     $config,
-    new Psr18Transport(new Psr18Client(), new Psr17Factory())
+    new Psr18Transport(new Psr18Client(), new Psr17Factory()),
+    new ClientOptions(
+        maxStatusRetries: 2,
+        statusRetryDelayMs: 150,
+        preventCallbackReplay: true,
+        idempotencyStore: new InMemoryIdempotencyStore(),
+        logger: new NullLogger(),
+    ),
 );
 ```
 
@@ -216,6 +227,55 @@ $config = GatewayConfig::make(
     statusCheckUrl: 'https://custom-esewa.example/api/epay/transaction/status/',
 );
 ```
+
+## Production Hardening
+
+### Retry policy for status checks
+
+`fetchStatus()` retries `TransportException` failures based on `ClientOptions`:
+
+```php
+new ClientOptions(
+    maxStatusRetries: 2,  // total additional retry attempts
+    statusRetryDelayMs: 150,
+);
+```
+
+### Callback replay protection (idempotency)
+
+Enable replay protection with an idempotency store:
+
+```php
+use EsewaPayment\Config\ClientOptions;
+use EsewaPayment\Infrastructure\Idempotency\InMemoryIdempotencyStore;
+
+$options = new ClientOptions(
+    preventCallbackReplay: true,
+    idempotencyStore: new InMemoryIdempotencyStore(),
+);
+```
+
+For production, implement `IdempotencyStoreInterface` with shared storage (Redis, DB, etc.) instead of in-memory storage.
+
+### Logging hooks
+
+Provide any PSR-3 logger in `ClientOptions`:
+
+```php
+use Psr\Log\LoggerInterface;
+
+$options = new ClientOptions(logger: $logger); // $logger is LoggerInterface
+```
+
+Emitted event keys (via log context):
+
+- `esewa.status.started`
+- `esewa.status.retry`
+- `esewa.status.completed`
+- `esewa.status.failed`
+- `esewa.callback.invalid_signature`
+- `esewa.callback.replay_detected`
+- `esewa.callback.verified`
 
 ## Framework Integration Examples
 
