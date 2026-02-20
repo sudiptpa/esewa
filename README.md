@@ -29,7 +29,7 @@ Framework-agnostic eSewa ePay v2 SDK for modern PHP applications.
 - [Transaction Status Flow](#transaction-status-flow)
 - [Configuration Patterns](#configuration-patterns)
 - [Production Hardening](#production-hardening)
-- [Framework Integration Examples](#framework-integration-examples)
+- [Laravel Integration (Secure)](#laravel-integration-secure)
 - [Custom Transport and Testing](#custom-transport-and-testing)
 - [Error Handling](#error-handling)
 - [Development](#development)
@@ -300,32 +300,176 @@ Emitted event keys (via log context):
 - `esewa.callback.replay_detected`
 - `esewa.callback.verified`
 
-## Framework Integration Examples
+## Laravel Integration (Secure)
 
-### Laravel service container binding
+### Supported Laravel Versions
+
+This package is framework-agnostic and supports PHP `8.1` to `8.5`.
+
+Laravel support is therefore:
+
+- Laravel `10.x`, `11.x`, `12.x` when your app runtime is PHP `8.1` to `8.5`
+- Other Laravel versions may work if they run on supported PHP and PSR dependencies, but are not the primary target matrix
+
+### 1) Service container binding (single client, production options)
+
+Create a provider (for example `app/Providers/EsewaServiceProvider.php`):
 
 ```php
 use EsewaPayment\Client\EsewaClient;
+use EsewaPayment\Config\ClientOptions;
 use EsewaPayment\Config\GatewayConfig;
+use EsewaPayment\Contracts\IdempotencyStoreInterface;
+use EsewaPayment\Infrastructure\Idempotency\InMemoryIdempotencyStore;
 use EsewaPayment\Infrastructure\Transport\Psr18Transport;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Symfony\Component\HttpClient\Psr18Client;
 
-$this->app->singleton(EsewaClient::class, function () {
-    $config = GatewayConfig::make(
-        merchantCode: config('services.esewa.merchant_code'),
-        secretKey: config('services.esewa.secret_key'),
-        environment: config('services.esewa.environment', 'uat'),
-    );
+$this->app->singleton(IdempotencyStoreInterface::class, function () {
+    // Replace with Redis/DB-backed implementation for multi-server production.
+    return new InMemoryIdempotencyStore();
+});
 
+$this->app->singleton(EsewaClient::class, function ($app) {
     return new EsewaClient(
-        $config,
-        new Psr18Transport(new Psr18Client(), new Psr17Factory())
+        GatewayConfig::make(
+            merchantCode: config('services.esewa.merchant_code'),
+            secretKey: config('services.esewa.secret_key'),
+            environment: config('services.esewa.environment', 'uat'),
+        ),
+        new Psr18Transport(new Psr18Client(), new Psr17Factory()),
+        new ClientOptions(
+            maxStatusRetries: 2,
+            statusRetryDelayMs: 150,
+            preventCallbackReplay: true,
+            idempotencyStore: $app->make(IdempotencyStoreInterface::class),
+            logger: $app->make(\Psr\Log\LoggerInterface::class),
+        ),
     );
 });
 ```
 
-### Symfony-style service wiring
+### 2) Route design (do not trust success redirect)
+
+Use separate callback verification endpoint and finalize order only after verification:
+
+```php
+use App\Http\Controllers\EsewaCallbackController;
+use App\Http\Controllers\EsewaCheckoutController;
+use Illuminate\Support\Facades\Route;
+
+Route::post('/payments/esewa/checkout', [EsewaCheckoutController::class, 'store'])
+    ->name('payments.esewa.checkout');
+
+Route::get('/payments/esewa/success', [EsewaCheckoutController::class, 'success'])
+    ->name('payments.esewa.success');
+
+Route::get('/payments/esewa/failure', [EsewaCheckoutController::class, 'failure'])
+    ->name('payments.esewa.failure');
+
+Route::post('/payments/esewa/callback', [EsewaCallbackController::class, 'handle'])
+    ->name('payments.esewa.callback');
+```
+
+### 3) Checkout controller (server-side source of truth)
+
+```php
+use EsewaPayment\Client\EsewaClient;
+use EsewaPayment\Domain\Checkout\CheckoutRequest;
+use Illuminate\Http\Request;
+
+final class EsewaCheckoutController
+{
+    public function store(Request $request, EsewaClient $esewa)
+    {
+        $order = /* create order in DB and generate transaction UUID */;
+
+        $intent = $esewa->checkout()->createIntent(new CheckoutRequest(
+            amount: (string) $order->amount,
+            taxAmount: '0',
+            serviceCharge: '0',
+            deliveryCharge: '0',
+            transactionUuid: $order->transaction_uuid,
+            productCode: config('services.esewa.merchant_code'),
+            successUrl: route('payments.esewa.success'),
+            failureUrl: route('payments.esewa.failure'),
+        ));
+
+        return view('payments.esewa.redirect', [
+            'action' => $intent->actionUrl,
+            'fields' => $intent->fields(),
+        ]);
+    }
+}
+```
+
+`resources/views/payments/esewa/redirect.blade.php`:
+
+```blade
+<form id="esewa-payment-form" method="POST" action="{{ $action }}">
+    @foreach ($fields as $name => $value)
+        <input type="hidden" name="{{ $name }}" value="{{ $value }}">
+    @endforeach
+</form>
+
+<script>
+    document.getElementById('esewa-payment-form').submit();
+</script>
+```
+
+### 4) Callback controller with strict verification
+
+```php
+use EsewaPayment\Client\EsewaClient;
+use EsewaPayment\Domain\Verification\CallbackPayload;
+use EsewaPayment\Domain\Verification\VerificationExpectation;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+final class EsewaCallbackController
+{
+    public function handle(Request $request, EsewaClient $esewa): Response
+    {
+        $payload = CallbackPayload::fromArray([
+            'data' => (string) $request->input('data', ''),
+            'signature' => (string) $request->input('signature', ''),
+        ]);
+
+        $order = /* lookup order using decoded transaction UUID */;
+        $expectation = new VerificationExpectation(
+            totalAmount: number_format((float) $order->payable_amount, 2, '.', ''),
+            transactionUuid: $order->transaction_uuid,
+            productCode: config('services.esewa.merchant_code'),
+            referenceId: null,
+        );
+
+        $result = $esewa->callbacks()->verifyCallback($payload, $expectation);
+
+        if (!$result->isSuccessful()) {
+            return response('invalid', 400);
+        }
+
+        // Optional: double-check status endpoint before marking paid.
+        // $status = $esewa->transactions()->fetchStatus(...);
+
+        // Mark paid exactly once (idempotent DB update).
+        // dispatch(new FulfillOrderJob($order->id));
+
+        return response('ok', 200);
+    }
+}
+```
+
+### 5) Security checklist (Laravel)
+
+- Keep `merchant_code` and `secret_key` only in `.env`
+- Never trust only `success` redirect for payment finalization
+- Verify callback signature and anti-fraud fields every time
+- Enforce idempotent order updates in DB and callback processing
+- Log verification failures and replay attempts
+- Queue downstream fulfillment after verified payment
+
+### Framework usage outside Laravel
 
 - Register `GatewayConfig` as a service parameter object
 - Inject `EsewaClient` into controllers/services
