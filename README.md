@@ -535,3 +535,20 @@ composer test
 composer stan
 composer rector:check
 ```
+
+## Author
+
+- Sujip Thapa (<sudiptpa@gmail.com>)
+
+## Contributing
+
+Contributions are welcome.
+
+If you would like to contribute:
+
+1. Fork the repository and create a feature branch.
+2. Add or update tests for your change.
+3. Run quality checks locally (`composer test`, `composer stan`).
+4. Open a pull request with a clear description.
+
+Bug reports, security hardening ideas, docs improvements, and real-world integration examples are all appreciated.
