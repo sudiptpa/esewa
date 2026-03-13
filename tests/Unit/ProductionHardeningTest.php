@@ -2,32 +2,31 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Tests\Unit;
+namespace Sujip\Esewa\Tests\Unit;
 
-use EsewaPayment\Client\EsewaClient;
-use EsewaPayment\Config\ClientOptions;
-use EsewaPayment\Config\GatewayConfig;
-use EsewaPayment\Domain\Transaction\PaymentStatus;
-use EsewaPayment\Domain\Transaction\TransactionStatusRequest;
-use EsewaPayment\Domain\Verification\CallbackPayload;
-use EsewaPayment\Exception\TransportException;
-use EsewaPayment\Infrastructure\Idempotency\InMemoryIdempotencyStore;
-use EsewaPayment\Service\SignatureService;
-use EsewaPayment\Tests\Fakes\ArrayLogger;
-use EsewaPayment\Tests\Fakes\FakeTransport;
-use EsewaPayment\Tests\Fakes\FlakyTransport;
+use Sujip\Esewa\Client\EsewaClient;
+use Sujip\Esewa\Config\ClientOptions;
+use Sujip\Esewa\Config\GatewayConfig;
+use Sujip\Esewa\Domain\Transaction\PaymentStatus;
+use Sujip\Esewa\Domain\Transaction\TransactionStatusRequest;
+use Sujip\Esewa\Domain\Verification\CallbackPayload;
+use Sujip\Esewa\Domain\Verification\VerificationState;
+use Sujip\Esewa\Exception\TransportException;
+use Sujip\Esewa\Infrastructure\Idempotency\InMemoryIdempotencyStore;
+use Sujip\Esewa\Contracts\RetryPolicyInterface;
+use Sujip\Esewa\Service\SignatureService;
+use Sujip\Esewa\Tests\Fakes\FakeTransport;
+use Sujip\Esewa\Tests\Fakes\FlakyTransport;
 use PHPUnit\Framework\TestCase;
 
 final class ProductionHardeningTest extends TestCase
 {
     public function testCallbackReplayProtectionRejectsDuplicatePayload(): void
     {
-        $logger = new ArrayLogger();
         $store = new InMemoryIdempotencyStore();
         $options = new ClientOptions(
             preventCallbackReplay: true,
             idempotencyStore: $store,
-            logger: $logger
         );
 
         $gateway = new EsewaClient(
@@ -52,14 +51,15 @@ final class ProductionHardeningTest extends TestCase
         $second = $gateway->callbacks()->verifyCallback($payload);
 
         $this->assertTrue($first->valid);
+        $this->assertSame(VerificationState::VERIFIED, $first->state);
         $this->assertFalse($second->valid);
+        $this->assertSame(VerificationState::REPLAYED, $second->state);
+        $this->assertTrue($second->isReplayed());
         $this->assertSame('Duplicate callback detected.', $second->message);
-        $this->assertTrue($this->hasEvent($logger, 'esewa.callback.replay_detected'));
     }
 
     public function testStatusCheckRetriesOnTransportErrorsAndEventuallySucceeds(): void
     {
-        $logger = new ArrayLogger();
         $transport = new FlakyTransport([
             new TransportException('temporary timeout'),
             new TransportException('temporary 502'),
@@ -69,7 +69,7 @@ final class ProductionHardeningTest extends TestCase
         $gateway = new EsewaClient(
             GatewayConfig::make('EPAYTEST', 'secret', 'uat'),
             $transport,
-            new ClientOptions(maxStatusRetries: 2, statusRetryDelayMs: 0, logger: $logger)
+            new ClientOptions(maxStatusRetries: 2, statusRetryDelayMs: 0)
         );
 
         $result = $gateway->transactions()->fetchStatus(new TransactionStatusRequest(
@@ -80,7 +80,6 @@ final class ProductionHardeningTest extends TestCase
 
         $this->assertSame(3, $transport->attempts);
         $this->assertSame(PaymentStatus::COMPLETE, $result->status);
-        $this->assertTrue($this->hasEvent($logger, 'esewa.status.retry'));
     }
 
     public function testStatusCheckThrowsWhenRetryLimitExceeded(): void
@@ -105,14 +104,51 @@ final class ProductionHardeningTest extends TestCase
         ));
     }
 
-    private function hasEvent(ArrayLogger $logger, string $event): bool
+    public function testStatusCheckUsesCustomRetryPolicy(): void
     {
-        foreach ($logger->records as $record) {
-            if (($record['context']['event'] ?? null) === $event) {
-                return true;
-            }
-        }
+        $transport = new FlakyTransport([
+            new TransportException('temporary timeout'),
+            ['status' => 'COMPLETE', 'ref_id' => 'REF-OK'],
+        ]);
 
-        return false;
+        $policy = new class implements RetryPolicyInterface {
+            public int $shouldRetryCalls = 0;
+            public int $delayCalls = 0;
+
+            public function shouldRetry(int $attempt, TransportException $exception): bool
+            {
+                ++$this->shouldRetryCalls;
+
+                return $attempt < 1;
+            }
+
+            public function delayUs(int $attempt, TransportException $exception): int
+            {
+                ++$this->delayCalls;
+
+                return 0;
+            }
+        };
+
+        $gateway = new EsewaClient(
+            GatewayConfig::make('EPAYTEST', 'secret', 'uat'),
+            $transport,
+            new ClientOptions(
+                maxStatusRetries: 0,
+                statusRetryDelayMs: 0,
+                retryPolicy: $policy,
+            )
+        );
+
+        $result = $gateway->transactions()->fetchStatus(new TransactionStatusRequest(
+            transactionUuid: 'TXN-3003',
+            totalAmount: '500.00',
+            productCode: 'EPAYTEST'
+        ));
+
+        $this->assertSame(1, $policy->shouldRetryCalls);
+        $this->assertSame(1, $policy->delayCalls);
+        $this->assertSame(2, $transport->attempts);
+        $this->assertSame(PaymentStatus::COMPLETE, $result->status);
     }
 }

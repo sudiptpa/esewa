@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment;
+namespace Sujip\Esewa;
 
-use EsewaPayment\Client\EsewaClient;
-use EsewaPayment\Config\ClientOptions;
-use EsewaPayment\Config\Environment;
-use EsewaPayment\Config\GatewayConfig;
-use EsewaPayment\Contracts\TransportInterface;
+use Sujip\Esewa\Client\EsewaClient;
+use Sujip\Esewa\Config\ClientOptions;
+use Sujip\Esewa\Config\Environment;
+use Sujip\Esewa\Config\GatewayConfig;
+use Sujip\Esewa\Contracts\TransportInterface;
+use Sujip\Esewa\Infrastructure\Transport\CurlTransport;
 
-final class EsewaPayment
+final class Esewa
 {
     public static function client(
         GatewayConfig $config,
-        TransportInterface $transport,
+        ?TransportInterface $transport = null,
         ?ClientOptions $options = null
-    ): EsewaClient
-    {
-        return new EsewaClient($config, $transport, $options);
+    ): EsewaClient {
+        return new EsewaClient($config, $transport ?? new CurlTransport(), $options);
     }
 
     public static function make(
         string $merchantCode,
         #[\SensitiveParameter]
         string $secretKey,
-        TransportInterface $transport,
+        ?TransportInterface $transport = null,
         Environment|string $environment = Environment::UAT,
         ?ClientOptions $options = null
     ): EsewaClient {

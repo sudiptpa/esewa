@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Client;
+namespace Sujip\Esewa\Client;
 
-use EsewaPayment\Domain\Verification\CallbackPayload;
-use EsewaPayment\Domain\Verification\CallbackVerification;
-use EsewaPayment\Domain\Verification\VerificationExpectation;
-use EsewaPayment\Service\CallbackVerifier;
+use Sujip\Esewa\Domain\Verification\CallbackPayload;
+use Sujip\Esewa\Domain\Verification\CallbackVerification;
+use Sujip\Esewa\Domain\Verification\VerificationExpectation;
+use Sujip\Esewa\Service\CallbackVerifier;
 
 final class CallbackService
 {

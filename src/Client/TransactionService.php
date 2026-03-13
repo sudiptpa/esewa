@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Client;
+namespace Sujip\Esewa\Client;
 
-use EsewaPayment\Config\ClientOptions;
-use EsewaPayment\Config\EndpointResolver;
-use EsewaPayment\Config\GatewayConfig;
-use EsewaPayment\Contracts\TransportInterface;
-use EsewaPayment\Domain\Transaction\TransactionStatus;
-use EsewaPayment\Domain\Transaction\TransactionStatusPayload;
-use EsewaPayment\Domain\Transaction\TransactionStatusRequest;
-use EsewaPayment\Exception\TransportException;
+use Sujip\Esewa\Config\ClientOptions;
+use Sujip\Esewa\Config\EndpointResolver;
+use Sujip\Esewa\Config\GatewayConfig;
+use Sujip\Esewa\Contracts\TransportInterface;
+use Sujip\Esewa\Domain\Transaction\TransactionStatus;
+use Sujip\Esewa\Domain\Transaction\TransactionStatusPayload;
+use Sujip\Esewa\Domain\Transaction\TransactionStatusRequest;
+use Sujip\Esewa\Exception\TransportException;
 
 final class TransactionService
 {
@@ -25,11 +25,6 @@ final class TransactionService
 
     public function fetchStatus(TransactionStatusRequest $query): TransactionStatus
     {
-        $this->options->logger->info('eSewa status check started.', [
-            'event' => 'esewa.status.started',
-            'transaction_uuid' => $query->transactionUuid,
-        ]);
-
         $attempt = 0;
 
         while (true) {
@@ -37,45 +32,25 @@ final class TransactionService
                 $payload = $this->transport->get(
                     $this->endpoints->statusCheckUrl($this->config),
                     [
-                        'product_code'     => $query->productCode,
-                        'total_amount'     => $query->totalAmount,
-                        'transaction_uuid' => $query->transactionUuid,
+                        'product_code'     => $query->productCode->value(),
+                        'total_amount'     => $query->totalAmount->value(),
+                        'transaction_uuid' => $query->transactionUuid->value(),
                     ]
                 );
 
                 $result = TransactionStatusPayload::fromArray($payload)->toResult();
 
-                $this->options->logger->info('eSewa status check completed.', [
-                    'event' => 'esewa.status.completed',
-                    'transaction_uuid' => $query->transactionUuid,
-                    'status' => $result->status->value,
-                ]);
-
                 return $result;
             } catch (TransportException $exception) {
-                if ($attempt >= $this->options->maxStatusRetries) {
-                    $this->options->logger->error('eSewa status check failed after retries.', [
-                        'event' => 'esewa.status.failed',
-                        'transaction_uuid' => $query->transactionUuid,
-                        'attempt' => $attempt,
-                        'error' => $exception->getMessage(),
-                    ]);
-
+                if (!$this->options->retryPolicy->shouldRetry($attempt, $exception)) {
                     throw $exception;
                 }
 
+                $delayUs = $this->options->retryPolicy->delayUs($attempt, $exception);
                 ++$attempt;
 
-                $this->options->logger->warning('eSewa status check retry scheduled.', [
-                    'event' => 'esewa.status.retry',
-                    'transaction_uuid' => $query->transactionUuid,
-                    'attempt' => $attempt,
-                    'max_retries' => $this->options->maxStatusRetries,
-                    'error' => $exception->getMessage(),
-                ]);
-
-                if ($this->options->statusRetryDelayMs > 0) {
-                    usleep($this->options->statusRetryDelayMs * 1000);
+                if ($delayUs > 0) {
+                    usleep($delayUs);
                 }
             }
         }

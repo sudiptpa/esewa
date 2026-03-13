@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Tests\Unit;
+namespace Sujip\Esewa\Tests\Unit;
 
-use EsewaPayment\Config\Environment;
-use EsewaPayment\Config\GatewayConfig;
+use Sujip\Esewa\Config\Environment;
+use Sujip\Esewa\Config\GatewayConfig;
 use PHPUnit\Framework\TestCase;
 
 final class GatewayConfigTest extends TestCase

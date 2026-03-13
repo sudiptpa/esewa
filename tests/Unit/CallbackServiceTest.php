@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Tests\Unit;
+namespace Sujip\Esewa\Tests\Unit;
 
-use EsewaPayment\Client\EsewaClient;
-use EsewaPayment\Config\GatewayConfig;
-use EsewaPayment\Domain\Transaction\PaymentStatus;
-use EsewaPayment\Domain\Verification\CallbackPayload;
-use EsewaPayment\Domain\Verification\VerificationExpectation;
-use EsewaPayment\Exception\FraudValidationException;
-use EsewaPayment\Service\SignatureService;
-use EsewaPayment\Tests\Fakes\FakeTransport;
+use Sujip\Esewa\Client\EsewaClient;
+use Sujip\Esewa\Config\GatewayConfig;
+use Sujip\Esewa\Domain\Transaction\PaymentStatus;
+use Sujip\Esewa\Domain\Verification\CallbackPayload;
+use Sujip\Esewa\Domain\Verification\VerificationExpectation;
+use Sujip\Esewa\Domain\Verification\VerificationState;
+use Sujip\Esewa\Exception\FraudValidationException;
+use Sujip\Esewa\Service\SignatureService;
+use Sujip\Esewa\Tests\Fakes\FakeTransport;
 use PHPUnit\Framework\TestCase;
 
 final class CallbackServiceTest extends TestCase
@@ -52,6 +53,7 @@ final class CallbackServiceTest extends TestCase
         ));
 
         $this->assertTrue($result->valid);
+        $this->assertSame(VerificationState::VERIFIED, $result->state);
         $this->assertTrue($result->isSuccessful());
     }
 
@@ -76,6 +78,7 @@ final class CallbackServiceTest extends TestCase
         $result = $gateway->callbacks()->verifyCallback($payload);
 
         $this->assertFalse($result->valid);
+        $this->assertSame(VerificationState::INVALID_SIGNATURE, $result->state);
         $this->assertSame(PaymentStatus::COMPLETE, $result->status);
         $this->assertSame('Invalid callback signature.', $result->message);
         $this->assertFalse($result->isSuccessful());

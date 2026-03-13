@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="vendor/autoload.php" colors="true" cacheDirectory=".phpunit.cache">
+<phpunit bootstrap="tests/bootstrap.php" colors="true" cacheDirectory=".phpunit.cache">
   <testsuites>
-    <testsuite name="EsewaPayment Test Suite">
+    <testsuite name="eSewa SDK Test Suite">
       <directory suffix="Test.php">tests</directory>
     </testsuite>
   </testsuites>

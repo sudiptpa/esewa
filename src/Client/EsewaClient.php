@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Client;
+namespace Sujip\Esewa\Client;
 
-use EsewaPayment\Config\ClientOptions;
-use EsewaPayment\Config\EndpointResolver;
-use EsewaPayment\Config\GatewayConfig;
-use EsewaPayment\Contracts\TransportInterface;
-use EsewaPayment\Service\CallbackVerifier;
-use EsewaPayment\Service\SignatureService;
+use Sujip\Esewa\Config\ClientOptions;
+use Sujip\Esewa\Config\EndpointResolver;
+use Sujip\Esewa\Config\GatewayConfig;
+use Sujip\Esewa\Contracts\TransportInterface;
+use Sujip\Esewa\Service\CallbackVerifier;
+use Sujip\Esewa\Service\SignatureService;
 
 final class EsewaClient
 {

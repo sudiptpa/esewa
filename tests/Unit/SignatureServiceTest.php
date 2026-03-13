@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Tests\Unit;
+namespace Sujip\Esewa\Tests\Unit;
 
-use EsewaPayment\Service\SignatureService;
+use Sujip\Esewa\Service\SignatureService;
 use PHPUnit\Framework\TestCase;
 
 final class SignatureServiceTest extends TestCase

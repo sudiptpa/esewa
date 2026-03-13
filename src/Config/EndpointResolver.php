@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Config;
+namespace Sujip\Esewa\Config;
 
 final class EndpointResolver
 {

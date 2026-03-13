@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Domain\Checkout;
+namespace Sujip\Esewa\Domain\Checkout;
 
 final class CheckoutIntent
 {

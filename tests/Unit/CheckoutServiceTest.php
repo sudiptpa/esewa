@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Tests\Unit;
+namespace Sujip\Esewa\Tests\Unit;
 
-use EsewaPayment\Client\EsewaClient;
-use EsewaPayment\Config\GatewayConfig;
-use EsewaPayment\Domain\Checkout\CheckoutRequest;
-use EsewaPayment\Tests\Fakes\FakeTransport;
+use Sujip\Esewa\Client\EsewaClient;
+use Sujip\Esewa\Esewa;
+use Sujip\Esewa\Config\GatewayConfig;
+use Sujip\Esewa\Domain\Checkout\CheckoutRequest;
+use Sujip\Esewa\Tests\Fakes\FakeTransport;
 use PHPUnit\Framework\TestCase;
 
 final class CheckoutServiceTest extends TestCase
@@ -40,5 +41,27 @@ final class CheckoutServiceTest extends TestCase
         $this->assertSame('100.00', $form['fields']['total_amount']);
         $this->assertSame('TXN-1001', $form['fields']['transaction_uuid']);
         $this->assertNotSame('', $form['fields']['signature']);
+    }
+
+    public function testFactoryCanBootstrapWithoutExplicitTransportForCheckout(): void
+    {
+        $gateway = Esewa::make(
+            merchantCode: 'EPAYTEST',
+            secretKey: 'secret',
+            environment: 'uat',
+        );
+
+        $intent = $gateway->checkout()->createIntent(new CheckoutRequest(
+            amount: '100',
+            taxAmount: '0',
+            serviceCharge: '0',
+            deliveryCharge: '0',
+            transactionUuid: 'TXN-1002',
+            productCode: 'EPAYTEST',
+            successUrl: 'https://merchant.test/success',
+            failureUrl: 'https://merchant.test/failure',
+        ));
+
+        $this->assertSame('TXN-1002', $intent->fields()['transaction_uuid']);
     }
 }

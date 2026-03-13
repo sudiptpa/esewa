@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Tests\Unit;
+namespace Sujip\Esewa\Tests\Unit;
 
-use EsewaPayment\Config\EndpointResolver;
-use EsewaPayment\Config\GatewayConfig;
+use Sujip\Esewa\Config\EndpointResolver;
+use Sujip\Esewa\Config\GatewayConfig;
 use PHPUnit\Framework\TestCase;
 
 final class EndpointResolverTest extends TestCase

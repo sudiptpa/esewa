@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Tests\Unit;
+namespace Sujip\Esewa\Tests\Unit;
 
-use EsewaPayment\Domain\Transaction\PaymentStatus;
-use EsewaPayment\Domain\Verification\CallbackPayload;
-use EsewaPayment\Exception\InvalidPayloadException;
+use Sujip\Esewa\Domain\Transaction\PaymentStatus;
+use Sujip\Esewa\Domain\Verification\CallbackPayload;
+use Sujip\Esewa\Exception\InvalidPayloadException;
 use PHPUnit\Framework\TestCase;
 
 final class CallbackPayloadTest extends TestCase

@@ -2,16 +2,19 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Domain\Transaction;
+namespace Sujip\Esewa\Domain\Transaction;
 
-final class TransactionStatus
+use Sujip\Esewa\Contracts\Arrayable;
+use Sujip\Esewa\ValueObject\ReferenceId;
+
+final class TransactionStatus implements Arrayable
 {
     /**
      * @param array<string,mixed> $raw
      */
     public function __construct(
         public readonly PaymentStatus $status,
-        public readonly ?string $referenceId,
+        public readonly ?ReferenceId $referenceId,
         public readonly array $raw,
     ) {
     }
@@ -19,5 +22,17 @@ final class TransactionStatus
     public function isSuccessful(): bool
     {
         return $this->status === PaymentStatus::COMPLETE;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        return [
+            'status' => $this->status->value,
+            'reference_id' => $this->referenceId?->value(),
+            'raw' => $this->raw,
+        ];
     }
 }

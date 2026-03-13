@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Exception;
+namespace Sujip\Esewa\Exception;
 
 final class ApiErrorException extends EsewaException
 {

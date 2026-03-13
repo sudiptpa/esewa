@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Exception;
+namespace Sujip\Esewa\Exception;
 
 class EsewaException extends \RuntimeException
 {

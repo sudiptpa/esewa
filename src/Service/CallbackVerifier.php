@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Service;
+namespace Sujip\Esewa\Service;
 
-use EsewaPayment\Config\ClientOptions;
-use EsewaPayment\Domain\Verification\CallbackPayload;
-use EsewaPayment\Domain\Verification\CallbackVerification;
-use EsewaPayment\Domain\Verification\VerificationExpectation;
-use EsewaPayment\Exception\FraudValidationException;
+use Sujip\Esewa\Config\ClientOptions;
+use Sujip\Esewa\Domain\Verification\CallbackPayload;
+use Sujip\Esewa\Domain\Verification\CallbackVerification;
+use Sujip\Esewa\Domain\Verification\VerificationExpectation;
+use Sujip\Esewa\Domain\Verification\VerificationState;
+use Sujip\Esewa\Exception\FraudValidationException;
 
 final class CallbackVerifier
 {
@@ -25,19 +26,15 @@ final class CallbackVerifier
 
         $validSignature = $this->signatures->verify(
             $payload->signature,
-            $data->totalAmount,
-            $data->transactionUuid,
-            $data->productCode,
+            $data->totalAmount->value(),
+            $data->transactionUuid->value(),
+            $data->productCode->value(),
             $data->signedFieldNames
         );
 
         if (!$validSignature) {
-            $this->options->logger->warning('eSewa callback rejected due to invalid signature.', [
-                'event' => 'esewa.callback.invalid_signature',
-                'transaction_uuid' => $data->transactionUuid,
-            ]);
-
             return new CallbackVerification(
+                VerificationState::INVALID_SIGNATURE,
                 false,
                 $data->status,
                 $data->transactionCode,
@@ -47,20 +44,21 @@ final class CallbackVerifier
         }
 
         if ($context !== null) {
-            $this->assertConsistent($context, $data->totalAmount, $data->transactionUuid, $data->productCode, $data->transactionCode);
+            $this->assertConsistent(
+                $context,
+                $data->totalAmount->value(),
+                $data->transactionUuid->value(),
+                $data->productCode->value(),
+                $data->transactionCode?->value()
+            );
         }
 
         if ($this->options->preventCallbackReplay) {
             $idempotencyKey = $this->resolveIdempotencyKey($payload, $data->transactionCode);
 
             if ($this->options->idempotencyStore->has($idempotencyKey)) {
-                $this->options->logger->warning('eSewa callback replay detected.', [
-                    'event' => 'esewa.callback.replay_detected',
-                    'transaction_uuid' => $data->transactionUuid,
-                    'reference_id' => $data->transactionCode,
-                ]);
-
                 return new CallbackVerification(
+                    VerificationState::REPLAYED,
                     false,
                     $data->status,
                     $data->transactionCode,
@@ -72,14 +70,14 @@ final class CallbackVerifier
             $this->options->idempotencyStore->put($idempotencyKey);
         }
 
-        $this->options->logger->info('eSewa callback verified.', [
-            'event' => 'esewa.callback.verified',
-            'transaction_uuid' => $data->transactionUuid,
-            'status' => $data->status->value,
-            'reference_id' => $data->transactionCode,
-        ]);
-
-        return new CallbackVerification(true, $data->status, $data->transactionCode, 'Callback verified.', $data->raw);
+        return new CallbackVerification(
+            VerificationState::VERIFIED,
+            true,
+            $data->status,
+            $data->transactionCode,
+            'Callback verified.',
+            $data->raw
+        );
     }
 
     private function assertConsistent(
@@ -89,33 +87,27 @@ final class CallbackVerifier
         string $productCode,
         ?string $referenceId
     ): void {
-        if ($context->totalAmount !== $totalAmount) {
+        if ($context->totalAmount->value() !== $totalAmount) {
             throw new FraudValidationException('total_amount mismatch during callback verification.');
         }
 
-        if ($context->transactionUuid !== $transactionUuid) {
+        if ($context->transactionUuid->value() !== $transactionUuid) {
             throw new FraudValidationException('transaction_uuid mismatch during callback verification.');
         }
 
-        if ($context->productCode !== $productCode) {
+        if ($context->productCode->value() !== $productCode) {
             throw new FraudValidationException('product_code mismatch during callback verification.');
         }
 
-        if ($context->referenceId !== null && $context->referenceId !== $referenceId) {
-            $this->options->logger->warning('eSewa callback fraud validation failed.', [
-                'event' => 'esewa.callback.fraud_reference_mismatch',
-                'expected_reference_id' => $context->referenceId,
-                'actual_reference_id' => $referenceId,
-            ]);
-
+        if ($context->referenceId !== null && $context->referenceId->value() !== $referenceId) {
             throw new FraudValidationException('reference_id mismatch during callback verification.');
         }
     }
 
-    private function resolveIdempotencyKey(CallbackPayload $payload, ?string $referenceId): string
+    private function resolveIdempotencyKey(CallbackPayload $payload, ?\Sujip\Esewa\ValueObject\ReferenceId $referenceId): string
     {
-        if ($referenceId !== null && $referenceId !== '') {
-            return 'ref:'.$referenceId;
+        if ($referenceId !== null) {
+            return 'ref:'.$referenceId->value();
         }
 
         return 'digest:'.hash('sha256', $payload->data.'|'.$payload->signature);

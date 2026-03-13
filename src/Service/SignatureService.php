@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Service;
+namespace Sujip\Esewa\Service;
 
 final class SignatureService
 {

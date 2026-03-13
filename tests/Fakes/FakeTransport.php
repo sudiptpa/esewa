@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Tests\Fakes;
+namespace Sujip\Esewa\Tests\Fakes;
 
-use EsewaPayment\Contracts\TransportInterface;
+use Sujip\Esewa\Contracts\TransportInterface;
 
 final class FakeTransport implements TransportInterface
 {
