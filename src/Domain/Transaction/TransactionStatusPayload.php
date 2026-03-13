@@ -21,9 +21,9 @@ final readonly class TransactionStatusPayload implements Arrayable, Hydratable
     }
 
     /** @param array<string,mixed> $raw */
-    public static function fromArray(array $raw): self
+    public static function fromArray(array $raw): static
     {
-        return new self(
+        return new static(
             status: PaymentStatus::fromValue(isset($raw['status']) ? (string) $raw['status'] : null),
             referenceId: isset($raw['ref_id']) && (string) $raw['ref_id'] !== ''
                 ? ReferenceId::fromString((string) $raw['ref_id'])
