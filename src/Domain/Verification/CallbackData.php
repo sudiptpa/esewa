@@ -30,7 +30,7 @@ final class CallbackData implements Arrayable, Hydratable
     }
 
     /** @param array<string,mixed> $data */
-    public static function fromArray(array $data): self
+    public static function fromArray(array $data): static
     {
         $totalAmount = (string) ($data['total_amount'] ?? '');
         $transactionUuid = (string) ($data['transaction_uuid'] ?? '');
@@ -40,7 +40,7 @@ final class CallbackData implements Arrayable, Hydratable
             throw new InvalidPayloadException('Callback data is missing required fields.');
         }
 
-        return new self(
+        return new static(
             totalAmount: Amount::fromString($totalAmount),
             transactionUuid: TransactionUuid::fromString($transactionUuid),
             productCode: ProductCode::fromString($productCode),
