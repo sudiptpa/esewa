@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Infrastructure\Idempotency;
+namespace Sujip\Esewa\Infrastructure\Idempotency;
 
-use EsewaPayment\Contracts\IdempotencyStoreInterface;
+use Sujip\Esewa\Contracts\IdempotencyStoreInterface;
 
 final class InMemoryIdempotencyStore implements IdempotencyStoreInterface
 {

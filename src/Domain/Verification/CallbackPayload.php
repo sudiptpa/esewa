@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Domain\Verification;
+namespace Sujip\Esewa\Domain\Verification;
 
-use EsewaPayment\Exception\InvalidPayloadException;
+use Sujip\Esewa\Exception\InvalidPayloadException;
 
-final class CallbackPayload
+final readonly class CallbackPayload
 {
     public function __construct(
         public readonly string $data,

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Domain\Checkout;
+namespace Sujip\Esewa\Domain\Checkout;
 
-final class CheckoutIntent
+final readonly class CheckoutIntent
 {
     public function __construct(
         public readonly string $actionUrl,

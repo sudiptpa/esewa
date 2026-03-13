@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Tests\Unit;
+namespace Sujip\Esewa\Tests\Unit;
 
-use EsewaPayment\Domain\Checkout\CheckoutRequest;
-use EsewaPayment\Domain\Transaction\TransactionStatusRequest;
+use Sujip\Esewa\Domain\Checkout\CheckoutRequest;
+use Sujip\Esewa\Domain\Transaction\TransactionStatusRequest;
 use PHPUnit\Framework\TestCase;
 
 final class DomainValidationTest extends TestCase
@@ -46,7 +46,7 @@ final class DomainValidationTest extends TestCase
     public function testTransactionStatusRequestThrowsWhenRequiredFieldMissing(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('transactionUuid, totalAmount and productCode are required.');
+        $this->expectExceptionMessage('transactionUuid is required.');
 
         new TransactionStatusRequest(
             transactionUuid: '',

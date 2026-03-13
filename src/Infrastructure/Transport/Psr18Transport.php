@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Infrastructure\Transport;
+namespace Sujip\Esewa\Infrastructure\Transport;
 
-use EsewaPayment\Contracts\TransportInterface;
-use EsewaPayment\Exception\ApiErrorException;
-use EsewaPayment\Exception\TransportException;
+use Sujip\Esewa\Contracts\TransportInterface;
+use Sujip\Esewa\Exception\ApiErrorException;
+use Sujip\Esewa\Exception\TransportException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 

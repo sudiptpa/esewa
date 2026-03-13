@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Tests\Unit;
+namespace Sujip\Esewa\Tests\Unit;
 
-use EsewaPayment\Client\EsewaClient;
-use EsewaPayment\EsewaPayment;
-use EsewaPayment\Tests\Fakes\FakeTransport;
+use Sujip\Esewa\Client\EsewaClient;
+use Sujip\Esewa\Esewa;
+use Sujip\Esewa\Tests\Fakes\FakeTransport;
 use PHPUnit\Framework\TestCase;
 
-final class EsewaPaymentTest extends TestCase
+final class EsewaTest extends TestCase
 {
     public function testMakeCreatesClientWithMinimalSetup(): void
     {
-        $client = EsewaPayment::make(
+        $client = Esewa::make(
             merchantCode: 'EPAYTEST',
             secretKey: 'secret',
             transport: new FakeTransport([]),

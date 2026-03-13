@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Client;
+namespace Sujip\Esewa\Client;
 
-use EsewaPayment\Config\EndpointResolver;
-use EsewaPayment\Config\GatewayConfig;
-use EsewaPayment\Domain\Checkout\CheckoutIntent;
-use EsewaPayment\Domain\Checkout\CheckoutPayload;
-use EsewaPayment\Domain\Checkout\CheckoutRequest;
-use EsewaPayment\Service\SignatureService;
+use Sujip\Esewa\Config\EndpointResolver;
+use Sujip\Esewa\Config\GatewayConfig;
+use Sujip\Esewa\Domain\Checkout\CheckoutIntent;
+use Sujip\Esewa\Domain\Checkout\CheckoutPayload;
+use Sujip\Esewa\Domain\Checkout\CheckoutRequest;
+use Sujip\Esewa\Service\SignatureService;
 
 final class CheckoutService
 {
@@ -25,17 +25,17 @@ final class CheckoutService
         $totalAmount = $request->totalAmount();
         $signature = $this->signatures->generate(
             $totalAmount,
-            $request->transactionUuid,
-            $request->productCode,
+            $request->transactionUuid->value(),
+            $request->productCode->value(),
             $request->signedFieldNames,
         );
 
         $payload = new CheckoutPayload(
-            amount: number_format((float) $request->amount, 2, '.', ''),
-            taxAmount: number_format((float) $request->taxAmount, 2, '.', ''),
-            serviceCharge: number_format((float) $request->serviceCharge, 2, '.', ''),
-            deliveryCharge: number_format((float) $request->deliveryCharge, 2, '.', ''),
-            totalAmount: $totalAmount,
+            amount: $request->amount,
+            taxAmount: $request->taxAmount,
+            serviceCharge: $request->serviceCharge,
+            deliveryCharge: $request->deliveryCharge,
+            totalAmount: \Sujip\Esewa\ValueObject\Amount::fromString($totalAmount),
             transactionUuid: $request->transactionUuid,
             productCode: $request->productCode,
             successUrl: $request->successUrl,

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Config;
+namespace Sujip\Esewa\Config;
 
-final class GatewayConfig
+final readonly class GatewayConfig
 {
     public function __construct(
         public readonly string $merchantCode,

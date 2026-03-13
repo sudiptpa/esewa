@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Contracts;
+namespace Sujip\Esewa\Contracts;
 
 interface TransportInterface
 {

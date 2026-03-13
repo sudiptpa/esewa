@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Domain\Transaction;
+namespace Sujip\Esewa\Domain\Transaction;
 
 enum PaymentStatus: string
 {

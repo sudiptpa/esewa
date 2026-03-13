@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace EsewaPayment\Tests\Unit;
+namespace Sujip\Esewa\Tests\Unit;
 
-use EsewaPayment\Client\EsewaClient;
-use EsewaPayment\Config\GatewayConfig;
-use EsewaPayment\Domain\Transaction\PaymentStatus;
-use EsewaPayment\Domain\Transaction\TransactionStatusRequest;
-use EsewaPayment\Tests\Fakes\FakeTransport;
+use Sujip\Esewa\Client\EsewaClient;
+use Sujip\Esewa\Config\GatewayConfig;
+use Sujip\Esewa\Domain\Transaction\PaymentStatus;
+use Sujip\Esewa\Domain\Transaction\TransactionStatusRequest;
+use Sujip\Esewa\Tests\Fakes\FakeTransport;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
