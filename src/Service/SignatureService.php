@@ -7,6 +7,7 @@ namespace Sujip\Esewa\Service;
 final class SignatureService
 {
     public function __construct(
+        #[\SensitiveParameter]
         private readonly string $secretKey,
     ) {
     }

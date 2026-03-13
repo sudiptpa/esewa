@@ -23,6 +23,7 @@ final class Esewa
 
     public static function make(
         string $merchantCode,
+        #[\SensitiveParameter]
         string $secretKey,
         ?TransportInterface $transport = null,
         Environment|string $environment = Environment::UAT,

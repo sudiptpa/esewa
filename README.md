@@ -5,7 +5,7 @@ Framework-agnostic, zero-dependency PHP SDK for eSewa ePay v2, with an optional 
 [![CI](https://github.com/sudiptpa/esewa-sdk-php/actions/workflows/ci.yml/badge.svg)](https://github.com/sudiptpa/esewa-sdk-php/actions/workflows/ci.yml)
 [![Latest Release](https://img.shields.io/github/v/release/sudiptpa/esewa-sdk-php?sort=semver)](https://github.com/sudiptpa/esewa-sdk-php/releases)
 [![GitHub Downloads](https://img.shields.io/github/downloads/sudiptpa/esewa-sdk-php/total)](https://github.com/sudiptpa/esewa-sdk-php/releases)
-[![PHP Version](https://img.shields.io/badge/php-8.1--8.5-777bb4.svg)](https://www.php.net/)
+[![PHP Version](https://img.shields.io/badge/php-8.2--8.5-777bb4.svg)](https://www.php.net/)
 [![Packagist](https://img.shields.io/badge/packagist-sudiptpa%2Fomnipay--esewa-f28d1a.svg)](https://packagist.org/packages/sudiptpa/omnipay-esewa)
 [![License](https://img.shields.io/github/license/sudiptpa/esewa-sdk-php)](LICENSE)
 
@@ -27,7 +27,7 @@ This package exposes two public namespaces:
 - replay protection backed by filesystem or PDO storage
 - optional PSR-18 transport support
 - optional Omnipay v3 bridge
-- PHP `8.1` to `8.5`
+- PHP `8.2` to `8.5`
 
 ## Installation
 
