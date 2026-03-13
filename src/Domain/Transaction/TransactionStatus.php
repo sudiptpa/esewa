@@ -7,7 +7,7 @@ namespace Sujip\Esewa\Domain\Transaction;
 use Sujip\Esewa\Contracts\Arrayable;
 use Sujip\Esewa\ValueObject\ReferenceId;
 
-final class TransactionStatus implements Arrayable
+final readonly class TransactionStatus implements Arrayable
 {
     /**
      * @param array<string,mixed> $raw

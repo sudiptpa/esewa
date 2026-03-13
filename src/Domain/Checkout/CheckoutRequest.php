@@ -10,7 +10,7 @@ use Sujip\Esewa\ValueObject\Amount;
 use Sujip\Esewa\ValueObject\ProductCode;
 use Sujip\Esewa\ValueObject\TransactionUuid;
 
-final class CheckoutRequest implements Arrayable, Hydratable
+final readonly class CheckoutRequest implements Arrayable, Hydratable
 {
     public readonly Amount $amount;
     public readonly Amount $taxAmount;

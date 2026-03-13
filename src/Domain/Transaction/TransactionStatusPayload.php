@@ -8,7 +8,7 @@ use Sujip\Esewa\Contracts\Arrayable;
 use Sujip\Esewa\Contracts\Hydratable;
 use Sujip\Esewa\ValueObject\ReferenceId;
 
-final class TransactionStatusPayload implements Arrayable, Hydratable
+final readonly class TransactionStatusPayload implements Arrayable, Hydratable
 {
     /**
      * @param array<string,mixed> $raw

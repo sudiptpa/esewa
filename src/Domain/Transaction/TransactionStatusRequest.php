@@ -10,7 +10,7 @@ use Sujip\Esewa\ValueObject\Amount;
 use Sujip\Esewa\ValueObject\ProductCode;
 use Sujip\Esewa\ValueObject\TransactionUuid;
 
-final class TransactionStatusRequest implements Arrayable, Hydratable
+final readonly class TransactionStatusRequest implements Arrayable, Hydratable
 {
     public readonly TransactionUuid $transactionUuid;
     public readonly Amount $totalAmount;

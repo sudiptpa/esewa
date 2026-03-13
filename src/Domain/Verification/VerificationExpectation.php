@@ -11,7 +11,7 @@ use Sujip\Esewa\ValueObject\ProductCode;
 use Sujip\Esewa\ValueObject\ReferenceId;
 use Sujip\Esewa\ValueObject\TransactionUuid;
 
-final class VerificationExpectation implements Arrayable, Hydratable
+final readonly class VerificationExpectation implements Arrayable, Hydratable
 {
     public readonly Amount $totalAmount;
     public readonly TransactionUuid $transactionUuid;

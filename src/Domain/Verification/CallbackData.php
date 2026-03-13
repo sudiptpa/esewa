@@ -13,7 +13,7 @@ use Sujip\Esewa\ValueObject\ProductCode;
 use Sujip\Esewa\ValueObject\ReferenceId;
 use Sujip\Esewa\ValueObject\TransactionUuid;
 
-final class CallbackData implements Arrayable, Hydratable
+final readonly class CallbackData implements Arrayable, Hydratable
 {
     /**
      * @param array<string,mixed> $raw

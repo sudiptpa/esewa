@@ -9,7 +9,7 @@ use Sujip\Esewa\ValueObject\Amount;
 use Sujip\Esewa\ValueObject\ProductCode;
 use Sujip\Esewa\ValueObject\TransactionUuid;
 
-final class CheckoutPayload implements Arrayable
+final readonly class CheckoutPayload implements Arrayable
 {
     public function __construct(
         public readonly Amount $amount,

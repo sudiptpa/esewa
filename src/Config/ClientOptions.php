@@ -11,7 +11,7 @@ use Sujip\Esewa\Infrastructure\Idempotency\NullIdempotencyStore;
 use Sujip\Esewa\Support\FixedDelayRetryPolicy;
 use Sujip\Esewa\Support\SystemClock;
 
-final class ClientOptions
+final readonly class ClientOptions
 {
     public readonly RetryPolicyInterface $retryPolicy;
     public readonly ClockInterface $clock;

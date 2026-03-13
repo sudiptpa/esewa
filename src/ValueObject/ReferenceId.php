@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Sujip\Esewa\ValueObject;
 
-final class ReferenceId
+final readonly class ReferenceId
 {
-    private function __construct(private readonly string $value)
+    private function __construct(private string $value)
     {
     }
 

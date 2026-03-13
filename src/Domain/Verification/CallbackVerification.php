@@ -8,7 +8,7 @@ use Sujip\Esewa\Contracts\Arrayable;
 use Sujip\Esewa\Domain\Transaction\PaymentStatus;
 use Sujip\Esewa\ValueObject\ReferenceId;
 
-final class CallbackVerification implements Arrayable
+final readonly class CallbackVerification implements Arrayable
 {
     /**
      * @param array<string,mixed> $raw

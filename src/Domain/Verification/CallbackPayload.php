@@ -6,7 +6,7 @@ namespace Sujip\Esewa\Domain\Verification;
 
 use Sujip\Esewa\Exception\InvalidPayloadException;
 
-final class CallbackPayload
+final readonly class CallbackPayload
 {
     public function __construct(
         public readonly string $data,
