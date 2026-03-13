@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Sujip\Esewa\ValueObject;
 
-final readonly class TransactionUuid
+final class TransactionUuid
 {
-    private function __construct(private string $value)
+    private function __construct(private readonly string $value)
     {
     }
 

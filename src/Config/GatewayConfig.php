@@ -8,7 +8,6 @@ final class GatewayConfig
 {
     public function __construct(
         public readonly string $merchantCode,
-        #[\SensitiveParameter]
         public readonly string $secretKey,
         public readonly Environment $environment = Environment::UAT,
         public readonly ?string $checkoutFormUrl = null,
@@ -25,7 +24,6 @@ final class GatewayConfig
 
     public static function make(
         string $merchantCode,
-        #[\SensitiveParameter]
         string $secretKey,
         Environment|string $environment = Environment::UAT,
         ?string $checkoutFormUrl = null,
