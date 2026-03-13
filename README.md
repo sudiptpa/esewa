@@ -4,9 +4,9 @@ Framework-agnostic, zero-dependency PHP SDK for eSewa ePay v2, with an optional 
 
 [![CI](https://github.com/sudiptpa/esewa-sdk-php/actions/workflows/ci.yml/badge.svg)](https://github.com/sudiptpa/esewa-sdk-php/actions/workflows/ci.yml)
 [![Latest Release](https://img.shields.io/github/v/release/sudiptpa/esewa-sdk-php?sort=semver)](https://github.com/sudiptpa/esewa-sdk-php/releases)
-[![GitHub Downloads](https://img.shields.io/github/downloads/sudiptpa/esewa-sdk-php/total)](https://github.com/sudiptpa/esewa-sdk-php/releases)
+[![Packagist Version](https://img.shields.io/packagist/v/sudiptpa/omnipay-esewa)](https://packagist.org/packages/sudiptpa/omnipay-esewa)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/sudiptpa/omnipay-esewa)](https://packagist.org/packages/sudiptpa/omnipay-esewa)
 [![PHP Version](https://img.shields.io/badge/php-8.2--8.5-777bb4.svg)](https://www.php.net/)
-[![Packagist](https://img.shields.io/badge/packagist-sudiptpa%2Fomnipay--esewa-f28d1a.svg)](https://packagist.org/packages/sudiptpa/omnipay-esewa)
 [![License](https://img.shields.io/github/license/sudiptpa/esewa-sdk-php)](LICENSE)
 
 ## Public API
