@@ -9,6 +9,12 @@ Framework-agnostic, zero-dependency PHP SDK for eSewa ePay v2, with an optional 
 [![PHP Version](https://img.shields.io/badge/php-8.2--8.5-777bb4.svg)](https://www.php.net/)
 [![License](https://img.shields.io/github/license/sudiptpa/esewa-sdk-php)](LICENSE)
 
+---
+
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/sudiptpa)
+
+If this package has been useful to you, GitHub Sponsors is a simple way to support ongoing maintenance, improvements, and future releases.
+
 ## Public API
 
 This package exposes two public namespaces:
